@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff"><title>Trading Research Academy</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#home"><span class="brand-mark">TR</span><span><b>Trading Research</b><small>ACADEMY</small></span></a>
+      <div class="side-label">LEARN</div>
+      <nav id="navigation" aria-label="Main navigation">
+        <a href="#home" data-view="home">⌂ <span>Start here</span></a>
+        <a href="#course" data-view="course">▤ <span>Course map</span><i>4</i></a>
+        <a href="#assessment" data-view="assessment">✓ <span>Part 1 assessment</span></a>
+        <a href="#lesson/1" data-view="lesson">◫ <span>Lesson reader</span></a>
+        <a href="#glossary" data-view="glossary">⌕ <span>Glossary & search</span></a>
+        <a href="#assistant" data-view="assistant">? <span>Learning assist</span></a>
+        <a href="#misconceptions" data-view="misconceptions">↻ <span>Review notebook</span></a>
+        <a href="#study" data-view="study">▦ <span>Study planner</span></a>
+        <div class="side-label tools-label">PRACTICE</div>
+        <a href="#exposure" data-view="exposure">⌁ <span>Exposure explorer</span></a>
+        <a href="#sizing" data-view="sizing">⊞ <span>Risk sizing</span></a>
+        <a href="#orders" data-view="orders">⇄ <span>Order practice</span></a>
+        <a href="#pretrade" data-view="pretrade">☑ <span>Pre-trade checklist</span></a>
+        <a href="#paper" data-view="paper">▥ <span>Paper trading lab</span></a>
+        <a href="#journal" data-view="journal">▧ <span>Trading journal</span></a>
+        <a href="#passport" data-view="passport">▣ <span>Product passport</span></a>
+        <div class="side-label tools-label">RESEARCH</div>
+        <a href="#testing" data-view="testing">⌗ <span>Strategy workspace</span></a>
+        <a href="#backtest" data-view="backtest">▤ <span>Backtesting lab</span></a>
+        <a href="#friend" data-view="friend">◉ <span>Friend-strategy intake</span></a>
+        <a href="#inbox" data-view="inbox">＋ <span>Research inbox</span></a>
+        <a href="#resources" data-view="resources">↗ <span>Resource library</span></a>
+        <a href="#settings" data-view="settings">⚙ <span>Data & settings</span></a>
+      </nav>
+      <div class="sidebar-note"><span class="dot"></span> Educational workspace <small>No broker connection</small></div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><button id="menuButton" class="icon-button mobile-only" aria-label="Open navigation">☰</button><div class="crumb" id="crumb">LEARNING / START HERE</div><div class="top-actions"><span class="local-label">LOCAL ONLY</span><button class="icon-button" id="themeButton" aria-label="Switch color theme">◐</button></div></header>
+      <section id="app" tabindex="-1"></section>
+      <footer><span>Trading Research Academy · Learning, not trading advice</span><span>Progress stays in this browser</span></footer>
+    </main>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="math.js"></script><script src="backtest/engine.js"></script><script src="backtest/providers.js"></script><script src="app.js"></script><script src="backtest/ui.js"></script>
+</body>
+</html>

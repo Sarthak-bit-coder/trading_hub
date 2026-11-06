@@ -1,0 +1,2 @@
+trade_id,paper_or_live,timestamp_timezone,symbol,venue,product_type,setup_version,equity_before,entry_planned,entry_actual,quantity,notional,margin,stop_planned,exit_planned,exit_actual,gross_pnl,fees,funding_borrow_cost,net_pnl,planned_loss_budget,rule_followed,screenshot_reference,decision_quality,notes
+,,,,,,,,,,,,,,,,,,,,,,,,

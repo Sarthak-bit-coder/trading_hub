@@ -1,0 +1,2 @@
+scenario,equity,loss_budget,entry,stop,cost_allowance_per_unit,fixed_cost,quantity_increment,minimum_size,rounded_quantity,notional,margin_ratio_assumption,planned_loss_including_costs,gap_exit,gap_loss,minimum_size_valid,cash_margin_valid,notes
+,,,,,,,,,,,,,,,,,

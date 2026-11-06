@@ -1,0 +1,28 @@
+[
+  {
+    "id": "user-csv",
+    "name": "User-supplied OHLCV CSV",
+    "status": "implemented",
+    "network": false,
+    "credentials": false,
+    "coverage": "Only the rows in the file supplied by the user; not independently authenticated",
+    "limits": "Source, corporate-action policy, exchange calendar, usage rights, and completeness must be supplied or remain unknown. Raw bars are held in memory only."
+  },
+  {
+    "id": "yahoo-finance-authorized-api",
+    "name": "Yahoo Finance authorized API (product unspecified)",
+    "status": "blocked pending official product and endpoint documentation",
+    "network": false,
+    "credentials": false,
+    "coverage": "Not verified",
+    "historicalDepth": "Not verified",
+    "resolution": "Not verified",
+    "delay": "Not verified",
+    "adjustments": "Not verified",
+    "apiLimits": "Not verified",
+    "pricing": "Not verified",
+    "license": "Not verified",
+    "authentication": "User has said access is authorized but does not know the method; no key or token supplied",
+    "nextRequirement": "Official docs for the authorized product, supported endpoints, terms, and server-side authentication approach"
+  }
+]

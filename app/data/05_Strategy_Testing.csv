@@ -1,0 +1,2 @@
+strategy_version,instrument_venue,timeframe_timezone,setup,entry_rule,stop_rule,exit_rule,sizing,no_trade_rules,regime_filter,data_source,development_period,validation_period,untouched_test_period,cost_model,slippage_model,benchmark,number_of_variants_tested,trade_count,net_expectancy,profit_factor,maximum_drawdown,rejection_criteria,remaining_uncertainty
+,,,,,,,,,,,,,,,,,,,,,,,
