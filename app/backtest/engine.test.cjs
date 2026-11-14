@@ -27,4 +27,18 @@ test('fees and slippage reduce otherwise identical net results',()=>{
 });
 test('CSV export guards spreadsheet formula injection',()=>{
   assert.match(csv([['value'],['=1+1']]),/"'=1\+1"/);
+  assert.match(csv([['value'],[-625]]),/"-625"/);
+  assert.match(csv([['value'],['-not-a-number']]),/"'-not-a-number"/);
+});
+test('equity has one point per bar and does not duplicate the first timestamp',()=>{
+  const x=run({bars:bars(),smaLength:3,startEquity:10000,allocationPct:25,feeBps:0,slippageBps:0});
+  assert.equal(x.equity.length,x.barsCount);
+  assert.equal(new Set(x.equity.map(point=>point.time)).size,x.barsCount);
+});
+test('open positions report charged fees separately from estimated exit cost',()=>{
+  const openBars=bars().slice(0,6);
+  const x=run({bars:openBars,smaLength:3,startEquity:10000,allocationPct:25,feeBps:10,slippageBps:0});
+  assert.ok(x.openPosition);
+  assert.equal(x.fees,x.openPosition.entryFee);
+  assert.ok(x.estimatedExitFee>0);
 });
