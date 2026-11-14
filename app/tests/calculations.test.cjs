@@ -1,6 +1,6 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {exposure,sizeLong,scoreQuiz,saveState,loadState,validateBackup}=require('../math.js');
+const {exposure,sizeLong,scoreQuiz,saveState,loadState,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,simulatePriceTick,calcPositions}=require('../math.js');
 
 test('Part 1 starter example values',()=>{
   const x=exposure({equity:1000,entry:50000,quantity:.02,ratio:10,exit:49200,fees:2});
@@ -48,4 +48,135 @@ test('backup validator accepts and bounds the new local research records',()=>{
   assert.equal(validateBackup({version:1,data}),true);
   assert.equal(validateBackup({version:1,data:{...data,researchInbox:[{creator:'bad',url:'javascript:alert(1)',claim:'x',excerpt:''}]}}),false);
   assert.equal(validateBackup({version:1,data:{...data,assistantMemory:'unexpected string'}}),false);
+});
+
+test('risk reward ratio calculates correctly for long and short',()=>{
+  const rrLong = calcRiskReward('Long', 100, 95, 115);
+  assert.equal(rrLong.valid, true);
+  assert.equal(rrLong.risk, 5);
+  assert.equal(rrLong.reward, 15);
+  assert.equal(rrLong.ratio, 3);
+  assert.equal(rrLong.formatted, '3.00:1');
+
+  const rrShort = calcRiskReward('Short', 100, 105, 85);
+  assert.equal(rrShort.valid, true);
+  assert.equal(rrShort.risk, 5);
+  assert.equal(rrShort.reward, 15);
+  assert.equal(rrShort.ratio, 3);
+  assert.equal(rrShort.formatted, '3.00:1');
+
+  const invalidLong = calcRiskReward('Long', 100, 105, 110);
+  assert.equal(invalidLong.valid, false);
+
+  const missingSl = calcRiskReward('Long', 100, null, 110);
+  assert.equal(missingSl.valid, false);
+  assert.equal(missingSl.ratio, null);
+});
+
+test('trade friction correctly computes slippage and fee drag',()=>{
+  const buy = calcTradeFriction({ price: 100, qty: 10, side: 'buy', slippageBps: 5, feeBps: 5 });
+  assert.equal(buy.basePrice, 100);
+  assert.equal(buy.executedPrice, 100.05);
+  assert.equal(buy.notional, 1000.5);
+  assert.ok(Math.abs(buy.fee - 0.50025) < 1e-6);
+  assert.ok(Math.abs(buy.slippageCost - 0.5) < 1e-6);
+  assert.ok(Math.abs(buy.totalFriction - 1.00025) < 1e-6);
+
+  const sell = calcTradeFriction({ price: 100, qty: 10, side: 'sell', slippageBps: 5, feeBps: 5 });
+  assert.equal(sell.executedPrice, 99.95);
+});
+
+test('parametric 1-day VaR scales with exposure, volatility and confidence',()=>{
+  const var95 = parametricVaR({ notional: 10000, dailyVol: 0.02, confidence: 0.95 });
+  assert.ok(Math.abs(var95.varDollar - 328.97) < 0.1);
+  assert.ok(Math.abs(var95.varPct - 3.2897) < 0.01);
+
+  const zeroVar = parametricVaR({ notional: 0, dailyVol: 0.02 });
+  assert.equal(zeroVar.varDollar, 0);
+  assert.equal(zeroVar.varPct, 0);
+});
+
+test('target volatility sizing calculates correct weights and notional',()=>{
+  const sizing = targetVolSize({ equity: 10000, targetVol: 0.15, assetVol: 0.30, price: 50 });
+  assert.equal(sizing.fits, true);
+  assert.equal(sizing.weight, 0.5);
+  assert.equal(sizing.targetNotional, 5000);
+  assert.equal(sizing.targetQty, 100);
+  assert.equal(sizing.leverage, 0.5);
+
+  const invalid = targetVolSize({ equity: -1000, targetVol: 0.15, assetVol: 0.30, price: 50 });
+  assert.equal(invalid.fits, false);
+  assert.ok(invalid.errors.length > 0);
+});
+
+test('max drawdown tracks peak and trough across equity curve',()=>{
+  const curve = [10000, 10500, 9450, 10200, 11000, 9900];
+  const mdd = maxDrawdown(curve);
+  assert.equal(mdd.peak, 11000);
+  assert.equal(mdd.trough, 9900);
+  assert.equal(mdd.maxDdDollar, 1100);
+  assert.ok(Math.abs(mdd.maxDdPct - 10) < 1e-6);
+
+  const empty = maxDrawdown([]);
+  assert.equal(empty.maxDdPct, 0);
+});
+
+test('price tick simulation preserves positive prices and applies GBM',()=>{
+  const tickZeroZ = simulatePriceTick(100, 0.20, 1/252, 0);
+  assert.ok(tickZeroZ.newPrice > 0);
+  assert.ok(tickZeroZ.newPrice < 100); // drift is negative -0.5*sigma^2*dt
+
+  const tickPositiveZ = simulatePriceTick(100, 0.20, 1/252, 1);
+  assert.ok(tickPositiveZ.newPrice > 100);
+});
+
+test('position calculator handles long, short, partial closes, and SL/TP triggers',()=>{
+  const watchlist = [
+    { symbol: 'AAPL', price: 110 },
+    { symbol: 'TSLA', price: 180 },
+    { symbol: 'SPY', price: 500 }
+  ];
+
+  const trades = [
+    { side: 'buy', symbol: 'AAPL', qty: 10, price: 100, sl: 90, tp: 120, fee: 0.5 },
+    { side: 'sell', symbol: 'TSLA', qty: 5, price: 200, sl: 210, tp: 170, fee: 0.5 }
+  ];
+
+  let pos = calcPositions(trades, watchlist);
+  assert.equal(pos.length, 2);
+
+  const aapl = pos.find(p => p.symbol === 'AAPL');
+  assert.equal(aapl.type, 'Long');
+  assert.equal(aapl.qty, 10);
+  assert.equal(aapl.entry, 100);
+  assert.equal(aapl.price, 110);
+  assert.equal(aapl.unrealized, 100); // 10 * (110 - 100)
+  assert.equal(aapl.slTriggered, false);
+  assert.equal(aapl.tpTriggered, false);
+
+  const tsla = pos.find(p => p.symbol === 'TSLA');
+  assert.equal(tsla.type, 'Short');
+  assert.equal(tsla.qty, 5);
+  assert.equal(tsla.entry, 200);
+  assert.equal(tsla.price, 180);
+  assert.equal(tsla.unrealized, 100); // 5 * (200 - 180)
+
+  // Now partial close AAPL
+  trades.push({ side: 'sell', symbol: 'AAPL', qty: 4, price: 110, fee: 0.2 });
+  pos = calcPositions(trades, watchlist);
+  const aaplAfter = pos.find(p => p.symbol === 'AAPL');
+  assert.equal(aaplAfter.qty, 6);
+  assert.equal(pos.totalRealized, 40); // 4 * (110 - 100)
+
+  // Price trigger test: AAPL drops to 89 (below SL 90)
+  const triggerWatchlist = [
+    { symbol: 'AAPL', price: 89 },
+    { symbol: 'TSLA', price: 165 } // below TP 170 for short
+  ];
+  const triggerPos = calcPositions(trades, triggerWatchlist);
+  const aaplTrigger = triggerPos.find(p => p.symbol === 'AAPL');
+  assert.equal(aaplTrigger.slTriggered, true);
+
+  const tslaTrigger = triggerPos.find(p => p.symbol === 'TSLA');
+  assert.equal(tslaTrigger.tpTriggered, true);
 });

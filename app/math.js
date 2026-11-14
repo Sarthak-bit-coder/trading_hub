@@ -30,7 +30,7 @@
   function saveState(storage,key,value){storage.setItem(key,JSON.stringify(value));}
   function loadState(storage,key,defaults){try{return {...defaults,...JSON.parse(storage.getItem(key)||'{}')}}catch{return {...defaults}}}
   function validateBackup(o){
-    const d=o?.data,required=['read','practiced','assignments','passed','mastered','bookmarks','journal','passport','strategy','friend','paperTrades','watchlist','customLessons'],extra=['misconceptions','researchInbox','savedQuestions','experiments','assistantMemory','btPaperOrders'];
+    const d=o?.data,required=['read','practiced','assignments','passed','mastered','bookmarks','journal','passport','strategy','friend','paperTrades','watchlist','customLessons'],extra=['misconceptions','researchInbox','savedQuestions','experiments','assistantMemory','btPaperOrders','paperEquityCurve'];
     if(o?.version!==1||!d||required.some(k=>!Array.isArray(d[k]))||extra.some(k=>k in d&&!Array.isArray(d[k]))||!d.notes||typeof d.notes!=='object'||Array.isArray(d.notes)||!d.studyPlan||typeof d.studyPlan!=='object'||Array.isArray(d.studyPlan)||!['light','dark'].includes(d.theme)||!Number.isFinite(d.equity)||d.equity<=0)return false;
     if([...d.read,...d.practiced,...d.assignments,...d.passed,...d.mastered,...d.bookmarks].some(n=>!Number.isInteger(n)||n<1||n>4))return false;
     if(d.journal.length>10000||d.passport.length>1000||d.strategy.length>1000||d.friend.length>1000||d.paperTrades.length>10000||d.watchlist.length>200||d.customLessons.length>500)return false;
@@ -46,12 +46,221 @@
     if(!(d.experiments||[]).every(x=>x&&typeof x.version==='string'&&typeof x.hash==='string'&&Number.isFinite(+x.netPnl)))return false;
     if(!(d.assistantMemory||[]).every(x=>typeof x==='string'&&x.length<=2000))return false;
     if((d.btPaperOrders||[]).length>10000||!(d.btPaperOrders||[]).every(x=>x&&['buy','sell'].includes(x.side)&&/^[A-Z0-9.^=-]{1,15}$/.test(x.symbol)&&['filled','rejected'].includes(x.status)&&Number.isFinite(+x.qty)&&+x.qty>0&&Number.isFinite(+x.price)&&+x.price>0&&Number.isFinite(+x.executionTime)))return false;
+    if('paperEquityCurve' in d&&(!Array.isArray(d.paperEquityCurve)||d.paperEquityCurve.length>10000))return false;
     if('btPaperStartingEquity' in d&&(!Number.isFinite(+d.btPaperStartingEquity)||+d.btPaperStartingEquity<=0))return false;
     if('testConsumed' in d&&typeof d.testConsumed!=='boolean')return false;
     if(Object.prototype.hasOwnProperty.call(d,'datasetMeta')&&(!d.datasetMeta||typeof d.datasetMeta!=='object'||Array.isArray(d.datasetMeta)))return false;
     return typeof d.assessmentPassed==='boolean'
   }
-  const api={exposure,sizeLong,scoreQuiz,saveState,loadState,validateBackup};
+  function calcRiskReward(type,entry,stopLoss,takeProfit){
+    const isLong=String(type).toLowerCase().includes('long')||String(type).toLowerCase()==='buy';
+    const e=+entry,sl=stopLoss!==null&&stopLoss!==undefined&&stopLoss!==''?+stopLoss:null;
+    const tp=takeProfit!==null&&takeProfit!==undefined&&takeProfit!==''?+takeProfit:null;
+    if(!Number.isFinite(e)||e<=0)return {risk:null,reward:null,ratio:null,formatted:'—',valid:false};
+    const hasSl=sl!==null&&Number.isFinite(sl)&&sl>0;
+    const hasTp=tp!==null&&Number.isFinite(tp)&&tp>0;
+    if(!hasSl||!hasTp){
+      return {risk:hasSl?Math.abs(e-sl):null,reward:hasTp?Math.abs(tp-e):null,ratio:null,formatted:'—',valid:false};
+    }
+    if(isLong){
+      if(sl>=e||tp<=e)return {risk:null,reward:null,ratio:null,formatted:'Invalid SL/TP',valid:false};
+      const risk=e-sl,reward=tp-e,ratio=reward/risk;
+      return {risk,reward,ratio,formatted:`${ratio.toFixed(2)}:1`,valid:true};
+    }else{
+      if(sl<=e||tp>=e)return {risk:null,reward:null,ratio:null,formatted:'Invalid SL/TP',valid:false};
+      const risk=sl-e,reward=e-tp,ratio=reward/risk;
+      return {risk,reward,ratio,formatted:`${ratio.toFixed(2)}:1`,valid:true};
+    }
+  }
+  function calcTradeFriction({price,qty,side,slippageBps=5,feeBps=5}){
+    const p=+price,q=+qty;
+    if(!Number.isFinite(p)||p<=0||!Number.isFinite(q)||q<=0)throw new Error('Price and quantity must be positive numbers');
+    const slipRate=(+slippageBps||0)*0.0001,feeRate=(+feeBps||0)*0.0001;
+    const isBuy=side==='buy'||String(side).toLowerCase().includes('long');
+    const executedPrice=isBuy?p*(1+slipRate):p*(1-slipRate);
+    const notional=q*executedPrice;
+    const fee=notional*feeRate;
+    const slippageCost=Math.abs(executedPrice-p)*q;
+    const totalFriction=fee+slippageCost;
+    return {basePrice:p,executedPrice,notional,fee,slippageCost,totalFriction};
+  }
+  function parametricVaR({notional,dailyVol,confidence=0.95}){
+    const n=+notional,v=+dailyVol;
+    if(!Number.isFinite(n)||n<=0||!Number.isFinite(v)||v<=0)return {varDollar:0,varPct:0,z:1.644853};
+    const zMap={0.9:1.28155,0.95:1.644853,0.99:2.32635};
+    const z=zMap[confidence]??1.644853;
+    const varDollar=n*v*z;
+    const varPct=v*z*100;
+    return {varDollar,varPct,z};
+  }
+  function targetVolSize({equity,targetVol,assetVol,price}){
+    const errors=[];const eq=+equity,tv=+targetVol,av=+assetVol,pr=+price;
+    if(!Number.isFinite(eq)||eq<=0)errors.push('Equity must be positive.');
+    if(!Number.isFinite(tv)||tv<=0)errors.push('Target volatility must be positive.');
+    if(!Number.isFinite(av)||av<=0)errors.push('Asset volatility must be positive.');
+    if(!Number.isFinite(pr)||pr<=0)errors.push('Price must be positive.');
+    if(errors.length)return {errors,fits:false};
+    const weight=tv/av;
+    const targetNotional=eq*weight;
+    const targetQty=targetNotional/pr;
+    const leverage=weight;
+    const dailyVaR=targetNotional*(av/Math.sqrt(252))*1.644853;
+    return {errors:[],fits:true,weight,targetNotional,targetQty,leverage,dailyVaR};
+  }
+  function maxDrawdown(equityCurve){
+    if(!Array.isArray(equityCurve)||equityCurve.length<2){
+      const v=typeof equityCurve?.[0]==='number'?equityCurve[0]:(equityCurve?.[0]?.equity??0);
+      return {maxDdPct:0,maxDdDollar:0,peak:v,trough:v};
+    }
+    let peak=-Infinity,maxDdDollar=0,maxDdPct=0,peakAtMax=0,troughAtMax=0;
+    for(const pt of equityCurve){
+      const val=typeof pt==='number'?pt:+pt.equity;
+      if(!Number.isFinite(val))continue;
+      if(val>peak)peak=val;
+      const ddDollar=peak-val;
+      const ddPct=peak>0?(ddDollar/peak)*100:0;
+      if(ddDollar>maxDdDollar){
+        maxDdDollar=ddDollar;
+        maxDdPct=ddPct;
+        peakAtMax=peak;
+        troughAtMax=val;
+      }
+    }
+    return {maxDdPct,maxDdDollar,peak:peakAtMax,trough:troughAtMax};
+  }
+  function simulatePriceTick(price,annualVol,dt=1/252,z=null){
+    const p=+price,v=+annualVol,deltaT=+dt;
+    if(!Number.isFinite(p)||p<=0)return {newPrice:p,pctChange:0};
+    let normZ=z;
+    if(normZ===null||!Number.isFinite(+normZ)){
+      const u1=Math.max(1e-15,Math.random());
+      const u2=Math.random();
+      normZ=Math.sqrt(-2.0*Math.log(u1))*Math.cos(2.0*Math.PI*u2);
+    }
+    const drift=-0.5*v*v*deltaT;
+    const diffusion=v*Math.sqrt(deltaT)*normZ;
+    const factor=Math.exp(drift+diffusion);
+    const newPrice=Math.max(1e-8,p*factor);
+    const pctChange=((newPrice-p)/p)*100;
+    return {newPrice,pctChange};
+  }
+  function calcPositions(trades=[],watchlist=[]){
+    const priceMap={};
+    for(const w of watchlist){
+      if(w&&w.symbol)priceMap[w.symbol]=+w.price;
+    }
+    const map={};
+    let totalRealized=0,totalFees=0;
+    for(const t of trades){
+      if(!t||!t.symbol||!Number.isFinite(+t.qty)||+t.qty<=0)continue;
+      const sym=t.symbol,qty=+t.qty,price=+t.price;
+      const fee=Number.isFinite(+t.fee)?+t.fee:0;
+      totalFees+=fee;
+      let p=map[sym]||{symbol:sym,netQty:0,avgEntry:0,sl:null,tp:null,realized:0};
+      if(t.sl!==undefined&&t.sl!==null&&t.sl!=='')p.sl=+t.sl;
+      if(t.tp!==undefined&&t.tp!==null&&t.tp!=='')p.tp=+t.tp;
+      if(t.side==='buy'){
+        if(p.netQty>=0){
+          p.avgEntry=p.netQty>0?(p.avgEntry*p.netQty+price*qty)/(p.netQty+qty):price;
+          p.netQty+=qty;
+        }else{
+          const shortQty=Math.abs(p.netQty);
+          const closeQty=Math.min(qty,shortQty);
+          const tradeRealized=(p.avgEntry-price)*closeQty;
+          p.realized+=tradeRealized;
+          totalRealized+=tradeRealized;
+          const remQty=qty-closeQty;
+          if(remQty>1e-8){
+            p.netQty=remQty;
+            p.avgEntry=price;
+          }else{
+            p.netQty+=closeQty;
+            if(Math.abs(p.netQty)<1e-8){
+              p.netQty=0;
+              p.avgEntry=0;
+              p.sl=null;
+              p.tp=null;
+            }
+          }
+        }
+      }else if(t.side==='sell'){
+        if(p.netQty<=0){
+          const shortQty=Math.abs(p.netQty);
+          p.avgEntry=shortQty>0?(p.avgEntry*shortQty+price*qty)/(shortQty+qty):price;
+          p.netQty-=qty;
+        }else{
+          const longQty=p.netQty;
+          const closeQty=Math.min(qty,longQty);
+          const tradeRealized=(price-p.avgEntry)*closeQty;
+          p.realized+=tradeRealized;
+          totalRealized+=tradeRealized;
+          const remQty=qty-closeQty;
+          if(remQty>1e-8){
+            p.netQty=-remQty;
+            p.avgEntry=price;
+          }else{
+            p.netQty-=closeQty;
+            if(Math.abs(p.netQty)<1e-8){
+              p.netQty=0;
+              p.avgEntry=0;
+              p.sl=null;
+              p.tp=null;
+            }
+          }
+        }
+      }
+      map[sym]=p;
+    }
+    const positions=[];
+    let totalUnrealized=0,totalNotional=0;
+    for(const sym of Object.keys(map)){
+      const p=map[sym];
+      if(Math.abs(p.netQty)<1e-8)continue;
+      const isLong=p.netQty>0;
+      const absQty=Math.abs(p.netQty);
+      const curPrice=priceMap[sym]??p.avgEntry;
+      const notional=absQty*curPrice;
+      const unrealized=isLong?absQty*(curPrice-p.avgEntry):absQty*(p.avgEntry-curPrice);
+      const pnlPct=p.avgEntry>0?(isLong?(curPrice-p.avgEntry)/p.avgEntry:(p.avgEntry-curPrice)/p.avgEntry)*100:0;
+      let slTriggered=false,tpTriggered=false;
+      if(p.sl!==null&&Number.isFinite(p.sl)){
+        if(isLong&&curPrice<=p.sl)slTriggered=true;
+        if(!isLong&&curPrice>=p.sl)slTriggered=true;
+      }
+      if(p.tp!==null&&Number.isFinite(p.tp)){
+        if(isLong&&curPrice>=p.tp)tpTriggered=true;
+        if(!isLong&&curPrice<=p.tp)tpTriggered=true;
+      }
+      const rr=calcRiskReward(isLong?'Long':'Short',p.avgEntry,p.sl,p.tp);
+      positions.push({
+        symbol:sym,
+        type:isLong?'Long':'Short',
+        side:isLong?'buy':'sell',
+        qty:absQty,
+        netQty:p.netQty,
+        entry:p.avgEntry,
+        avg:p.avgEntry,
+        price:curPrice,
+        notional,
+        unrealized,
+        pnlPct,
+        sl:p.sl,
+        tp:p.tp,
+        riskReward:rr,
+        slTriggered,
+        tpTriggered,
+        realized:p.realized
+      });
+      totalUnrealized+=unrealized;
+      totalNotional+=notional;
+    }
+    positions.totalRealized=totalRealized;
+    positions.totalFees=totalFees;
+    positions.totalUnrealized=totalUnrealized;
+    positions.totalNotional=totalNotional;
+    return positions;
+  }
+  const api={exposure,sizeLong,scoreQuiz,saveState,loadState,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,simulatePriceTick,calcPositions};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.AcademyMath=api;
 })(typeof window!=='undefined'?window:globalThis);

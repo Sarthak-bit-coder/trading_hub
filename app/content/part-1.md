@@ -5,12 +5,19 @@ Interim course volume for Sarthak. Educational simulations only. This is not the
 Your first task is to explain every number on an order ticket, not to find a winning setup. Use paper trading for these assignments. Account equity, exposure, collateral and planned loss are different quantities. Do not treat a simulation as proof of achievable live execution or profitability.
 
 ## Course map
-Available: Part 1 — exposure, products, orders, margin and basic sizing.
-Awaiting material: Part 2 — liquidity, market structure, trading terminology and analysis tools.
-Awaiting material: Part 3 — risk mathematics, costs, testing, uncertainty and benchmarks.
-Awaiting material: Part 4 — fully specified trend/pullback, breakout and mean-reversion strategy labs.
+Available: Part 1 — exposure, products, orders, margin and basic sizing (Lessons 1–4).
+Available: Part 2 — advanced quantitative strategies, risk modeling, systematic execution, and parameter optimization (Lessons 5–8 in `app/content/part-2-quant-strategies.md`).
+Awaiting material: Part 3 — liquidity, market microstructure, and high-frequency order book dynamics.
+Awaiting material: Part 4 — automated live execution bridges, algorithmic routing, and broker API integration.
 Awaiting material: Part 5 — discipline, current U.S./California safeguards, tax introduction, complete friend-strategy rubric and graduation assessment.
-Advanced electives are also awaiting material. Do not mark these parts available or completed.
+
+## Part 2 Quantitative Strategy Electives Preview
+Students who have demonstrated mastery of Part 1 mechanics can advance to Part 2 (`app/content/part-2-quant-strategies.md`), which integrates three quantitative research systems located in `materials/external_repos/`:
+- Lesson 5 — Multi-Asset Momentum & The Rotation Index: cross-asset rotation across Equities (SPY, QQQ), Treasuries (TLT, IEF), Commodities (GLD), Crypto (BTC), and high-beta tokens. Connects NBA Lineup RAPM (Ridge Regression Regularized Adjusted Plus-Minus from `materials/external_repos/Rotation-Index`) to factor shrinkage, collinearity control, and turnover dampening.
+- Lesson 6 — The RiskLens Framework: Downside Risk, Cornish-Fisher VaR/CVaR, and Volatility Targeting: non-Gaussian fat-tailed distributions, skewness, excess kurtosis, Cornish-Fisher quantile expansion, Conditional VaR (Expected Shortfall), RiskMetrics EWMA volatility, and dynamic inverse-volatility sizing from `materials/external_repos/RiskLens`.
+- Lesson 7 — Systematic Execution, Stop Loss / Take Profit Mechanics, and Paper Trading: event-driven order lifecycles without lookahead bias, overnight gap risk through protective stops, trailing stop ratcheting, slippage/fee boundaries, and pure arbitrary-precision Decimal portfolio accounting from `materials/external_repos/vektor`.
+- Lesson 8 — Parameter Optimization & Avoiding Overfitting: parameter grid searches, strictly chronological train/test holdout splits (`split_calendar`), walk-forward analysis, and the five automated `vektor` overfitting diagnostic flags (`return_reversal`, `sharpe_decay`, `few_trades`, `edge_of_grid`, `many_candidates`).
+To customize or generate personalized lesson extensions, see the prompt artifact `materials/PROMPT_EDIT_LEARNING_PLAN.md`.
 
 ## Lesson 1 — Exposure is not margin
 ### Objective and prerequisites
