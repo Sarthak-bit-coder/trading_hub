@@ -27,12 +27,22 @@
     return {errors:[],fits:true,raw,quantity,notional,plannedLoss,budgetPct:budget/equity*100,worseLoss,margin:marginRatio?notional/marginRatio:null};
   }
   function scoreQuiz(correctIndexes,answers){let score=0;correctIndexes.forEach((correct,i)=>{if(answers[i]===correct)score++});return {score,total:correctIndexes.length,passed:correctIndexes.length>0&&score===correctIndexes.length};}
+  const BACKUP_VERSION=2,LESSON_COUNT=8;
+  const clone=value=>typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value));
+  const plainObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
   function saveState(storage,key,value){storage.setItem(key,JSON.stringify(value));}
-  function loadState(storage,key,defaults){try{return {...defaults,...JSON.parse(storage.getItem(key)||'{}')}}catch{return {...defaults}}}
+  function loadState(storage,key,defaults){
+    const base=clone(defaults);
+    try{const saved=JSON.parse(storage.getItem(key)||'{}');return plainObject(saved)?{...base,...saved}:base}catch{return base}
+  }
+  function migrateBackup(backup){
+    if(!plainObject(backup)||!plainObject(backup.data)||![1,2].includes(backup.version))return null;
+    return {...backup,version:BACKUP_VERSION,data:clone(backup.data)};
+  }
   function validateBackup(o){
-    const d=o?.data,required=['read','practiced','assignments','passed','mastered','bookmarks','journal','passport','strategy','friend','paperTrades','watchlist','customLessons'],extra=['misconceptions','researchInbox','savedQuestions','experiments','assistantMemory','btPaperOrders','paperEquityCurve'];
-    if(o?.version!==1||!d||required.some(k=>!Array.isArray(d[k]))||extra.some(k=>k in d&&!Array.isArray(d[k]))||!d.notes||typeof d.notes!=='object'||Array.isArray(d.notes)||!d.studyPlan||typeof d.studyPlan!=='object'||Array.isArray(d.studyPlan)||!['light','dark'].includes(d.theme)||!Number.isFinite(d.equity)||d.equity<=0)return false;
-    if([...d.read,...d.practiced,...d.assignments,...d.passed,...d.mastered,...d.bookmarks].some(n=>!Number.isInteger(n)||n<1||n>4))return false;
+    const migrated=migrateBackup(o),d=migrated?.data,required=['read','practiced','assignments','passed','mastered','bookmarks','journal','passport','strategy','friend','paperTrades','watchlist','customLessons'],extra=['misconceptions','researchInbox','savedQuestions','experiments','assistantMemory','btPaperOrders','paperEquityCurve'];
+    if(!migrated||required.some(k=>!Array.isArray(d[k]))||extra.some(k=>k in d&&!Array.isArray(d[k]))||!d.notes||typeof d.notes!=='object'||Array.isArray(d.notes)||!d.studyPlan||typeof d.studyPlan!=='object'||Array.isArray(d.studyPlan)||!['light','dark'].includes(d.theme)||!Number.isFinite(d.equity)||d.equity<=0)return false;
+    if([...d.read,...d.practiced,...d.assignments,...d.passed,...d.mastered,...d.bookmarks].some(n=>!Number.isInteger(n)||n<1||n>LESSON_COUNT))return false;
     if(d.journal.length>10000||d.passport.length>1000||d.strategy.length>1000||d.friend.length>1000||d.paperTrades.length>10000||d.watchlist.length>200||d.customLessons.length>500)return false;
     if(!d.journal.every(x=>x&&typeof x==='object')||!d.passport.every(x=>x&&typeof x==='object')||!d.strategy.every(x=>x&&typeof x==='object')||!d.friend.every(x=>x&&typeof x==='object'))return false;
     if(!d.watchlist.every(x=>x&&/^[A-Z0-9.^=-]{1,15}$/.test(x.symbol)&&Number.isFinite(+x.price)&&+x.price>0))return false;
@@ -42,7 +52,7 @@
     if((d.misconceptions||[]).length>1000||(d.researchInbox||[]).length>5000||(d.savedQuestions||[]).length>5000||(d.experiments||[]).length>5000||(d.assistantMemory||[]).length>10)return false;
     if(!(d.misconceptions||[]).every(x=>x&&typeof x.concept==='string'&&x.concept.length<=300&&typeof x.note==='string'&&x.note.length<=5000))return false;
     if(!(d.researchInbox||[]).every(x=>x&&typeof x.creator==='string'&&x.creator.length<=500&&typeof x.url==='string'&&/^https?:\/\//i.test(x.url)&&typeof x.claim==='string'&&x.claim.length<=5000&&typeof x.excerpt==='string'&&x.excerpt.length<=10000))return false;
-    if(!(d.savedQuestions||[]).every(x=>x&&typeof x.text==='string'&&x.text.length<=5000&&Number.isInteger(+x.lesson)&&+x.lesson>=1&&+x.lesson<=4))return false;
+    if(!(d.savedQuestions||[]).every(x=>x&&typeof x.text==='string'&&x.text.length<=5000&&Number.isInteger(+x.lesson)&&+x.lesson>=1&&+x.lesson<=LESSON_COUNT))return false;
     if(!(d.experiments||[]).every(x=>x&&typeof x.version==='string'&&typeof x.hash==='string'&&Number.isFinite(+x.netPnl)))return false;
     if(!(d.assistantMemory||[]).every(x=>typeof x==='string'&&x.length<=2000))return false;
     if((d.btPaperOrders||[]).length>10000||!(d.btPaperOrders||[]).every(x=>x&&['buy','sell'].includes(x.side)&&/^[A-Z0-9.^=-]{1,15}$/.test(x.symbol)&&['filled','rejected'].includes(x.status)&&Number.isFinite(+x.qty)&&+x.qty>0&&Number.isFinite(+x.price)&&+x.price>0&&Number.isFinite(+x.executionTime)))return false;
@@ -86,26 +96,30 @@
   }
   function parametricVaR({notional,dailyVol,confidence=0.95}){
     const n=+notional,v=+dailyVol;
-    if(!Number.isFinite(n)||n<=0||!Number.isFinite(v)||v<=0)return {varDollar:0,varPct:0,z:1.644853};
     const zMap={0.9:1.28155,0.95:1.644853,0.99:2.32635};
-    const z=zMap[confidence]??1.644853;
+    const errors=[];
+    if(!Number.isFinite(n)||n<=0)errors.push('Notional must be positive.');
+    if(!Number.isFinite(v)||v<=0)errors.push('Daily volatility must be positive.');
+    if(!(confidence in zMap))errors.push('Confidence must be 90%, 95%, or 99%.');
+    if(errors.length)return {errors,valid:false,varDollar:null,varPct:null,z:null};
+    const z=zMap[confidence];
     const varDollar=n*v*z;
     const varPct=v*z*100;
-    return {varDollar,varPct,z};
+    return {errors:[],valid:true,varDollar,varPct,z};
   }
-  function targetVolSize({equity,targetVol,assetVol,price}){
+  function targetVolSize({equity,targetVol,assetVol,price,maxLeverage=1}){
     const errors=[];const eq=+equity,tv=+targetVol,av=+assetVol,pr=+price;
     if(!Number.isFinite(eq)||eq<=0)errors.push('Equity must be positive.');
     if(!Number.isFinite(tv)||tv<=0)errors.push('Target volatility must be positive.');
     if(!Number.isFinite(av)||av<=0)errors.push('Asset volatility must be positive.');
     if(!Number.isFinite(pr)||pr<=0)errors.push('Price must be positive.');
+    if(!Number.isFinite(+maxLeverage)||+maxLeverage<=0)errors.push('Maximum leverage must be positive.');
     if(errors.length)return {errors,fits:false};
-    const weight=tv/av;
+    const requestedLeverage=tv/av,leverage=Math.min(requestedLeverage,+maxLeverage),capped=requestedLeverage>leverage,weight=leverage;
     const targetNotional=eq*weight;
     const targetQty=targetNotional/pr;
-    const leverage=weight;
     const dailyVaR=targetNotional*(av/Math.sqrt(252))*1.644853;
-    return {errors:[],fits:true,weight,targetNotional,targetQty,leverage,dailyVaR};
+    return {errors:[],fits:true,weight,targetNotional,targetQty,leverage,capped,dailyVaR};
   }
   function maxDrawdown(equityCurve){
     if(!Array.isArray(equityCurve)||equityCurve.length<2){
@@ -128,13 +142,14 @@
     }
     return {maxDdPct,maxDdDollar,peak:peakAtMax,trough:troughAtMax};
   }
-  function simulatePriceTick(price,annualVol,dt=1/252,z=null){
+  function mulberry32(seed){let value=seed>>>0;return ()=>{value|=0;value=value+0x6D2B79F5|0;let t=Math.imul(value^value>>>15,1|value);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296}}
+  function simulatePriceTick(price,annualVol,dt=1/252,z=null,rng=Math.random){
     const p=+price,v=+annualVol,deltaT=+dt;
     if(!Number.isFinite(p)||p<=0)return {newPrice:p,pctChange:0};
     let normZ=z;
     if(normZ===null||!Number.isFinite(+normZ)){
-      const u1=Math.max(1e-15,Math.random());
-      const u2=Math.random();
+      const u1=Math.max(1e-15,rng());
+      const u2=rng();
       normZ=Math.sqrt(-2.0*Math.log(u1))*Math.cos(2.0*Math.PI*u2);
     }
     const drift=-0.5*v*v*deltaT;
@@ -260,7 +275,7 @@
     positions.totalNotional=totalNotional;
     return positions;
   }
-  const api={exposure,sizeLong,scoreQuiz,saveState,loadState,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,simulatePriceTick,calcPositions};
+  const api={BACKUP_VERSION,exposure,sizeLong,scoreQuiz,saveState,loadState,migrateBackup,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,mulberry32,simulatePriceTick,calcPositions};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.AcademyMath=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -1,6 +1,6 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {exposure,sizeLong,scoreQuiz,saveState,loadState,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,simulatePriceTick,calcPositions}=require('../math.js');
+const {exposure,sizeLong,scoreQuiz,saveState,loadState,validateBackup,migrateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,mulberry32,simulatePriceTick,calcPositions}=require('../math.js');
 
 test('Part 1 starter example values',()=>{
   const x=exposure({equity:1000,entry:50000,quantity:.02,ratio:10,exit:49200,fees:2});
@@ -38,6 +38,17 @@ test('progress state round-trips through browser storage interface',()=>{
   const defaults={read:[],notes:{},theme:'light'};saveState(storage,'academy',{...defaults,read:[1],notes:{1:'review'}});
   assert.deepEqual(loadState(storage,'academy',defaults),{read:[1],notes:{1:'review'},theme:'light'});
 });
+test('loading state deep-clones defaults instead of sharing reset data',()=>{
+  const values=new Map(),storage={setItem:(k,v)=>values.set(k,v),getItem:k=>values.get(k)||null};
+  const defaults={read:[],notes:{},journal:[]};
+  const state=loadState(storage,'academy',defaults);
+  state.read.push(5);state.notes.lesson='review';state.journal.push({note:'kept'});
+  assert.deepEqual(defaults,{read:[],notes:{},journal:[]});
+});
+test('loading state ignores a stored non-object',()=>{
+  const storage={getItem:()=>JSON.stringify('abc')};
+  assert.deepEqual(loadState(storage,'academy',{read:[],theme:'light'}),{read:[],theme:'light'});
+});
 test('backup validator accepts export shape and rejects invalid workbook data',()=>{
   const data={theme:'light',read:[1],practiced:[],assignments:[],passed:[],mastered:[],bookmarks:[],assessmentPassed:false,notes:{},studyPlan:{},journal:[],passport:[],strategy:[],friend:[],watchlist:[{symbol:'AAPL',price:190}],paperTrades:[],customLessons:[],equity:10000};
   assert.equal(validateBackup({version:1,data}),true);
@@ -48,6 +59,18 @@ test('backup validator accepts and bounds the new local research records',()=>{
   assert.equal(validateBackup({version:1,data}),true);
   assert.equal(validateBackup({version:1,data:{...data,researchInbox:[{creator:'bad',url:'javascript:alert(1)',claim:'x',excerpt:''}]}}),false);
   assert.equal(validateBackup({version:1,data:{...data,assistantMemory:'unexpected string'}}),false);
+});
+test('backup migration upgrades v1 and preserves Part 2 progress',()=>{
+  const data={theme:'light',read:[5],practiced:[6],assignments:[7],passed:[],mastered:[8],bookmarks:[5],assessmentPassed:false,notes:{},studyPlan:{},journal:[],passport:[],strategy:[],friend:[],watchlist:[],paperTrades:[],customLessons:[],equity:10000,savedQuestions:[{text:'What is VaR?',lesson:6}]};
+  const migrated=migrateBackup({version:1,data});
+  assert.equal(migrated.version,2);
+  assert.deepEqual(migrated.data.read,[5]);
+  assert.equal(validateBackup(migrated),true);
+});
+test('backup validator accepts v2 Part 2 progress and rejects unknown versions',()=>{
+  const data={theme:'light',read:[5],practiced:[],assignments:[],passed:[],mastered:[8],bookmarks:[],assessmentPassed:false,notes:{},studyPlan:{},journal:[],passport:[],strategy:[],friend:[],watchlist:[],paperTrades:[],customLessons:[],equity:10000};
+  assert.equal(validateBackup({version:2,data}),true);
+  assert.equal(validateBackup({version:3,data}),false);
 });
 
 test('risk reward ratio calculates correctly for long and short',()=>{
@@ -91,9 +114,12 @@ test('parametric 1-day VaR scales with exposure, volatility and confidence',()=>
   assert.ok(Math.abs(var95.varDollar - 328.97) < 0.1);
   assert.ok(Math.abs(var95.varPct - 3.2897) < 0.01);
 
-  const zeroVar = parametricVaR({ notional: 0, dailyVol: 0.02 });
-  assert.equal(zeroVar.varDollar, 0);
-  assert.equal(zeroVar.varPct, 0);
+  const invalid = parametricVaR({ notional: 0, dailyVol: 0.02 });
+  assert.equal(invalid.valid, false);
+  assert.ok(invalid.errors.length > 0);
+  const unsupported = parametricVaR({ notional: 10000, dailyVol: 0.02, confidence: 0.975 });
+  assert.equal(unsupported.valid, false);
+  assert.ok(unsupported.errors.some(error=>error.includes('90%, 95%, or 99%')));
 });
 
 test('target volatility sizing calculates correct weights and notional',()=>{
@@ -103,6 +129,14 @@ test('target volatility sizing calculates correct weights and notional',()=>{
   assert.equal(sizing.targetNotional, 5000);
   assert.equal(sizing.targetQty, 100);
   assert.equal(sizing.leverage, 0.5);
+
+  const capped = targetVolSize({ equity: 10000, targetVol: 0.15, assetVol: 0.025, price: 50 });
+  assert.equal(capped.leverage, 1);
+  assert.equal(capped.capped, true);
+
+  const customCap = targetVolSize({ equity: 10000, targetVol: 0.15, assetVol: 0.025, price: 50, maxLeverage: 2 });
+  assert.equal(customCap.leverage, 2);
+  assert.equal(customCap.capped, true);
 
   const invalid = targetVolSize({ equity: -1000, targetVol: 0.15, assetVol: 0.30, price: 50 });
   assert.equal(invalid.fits, false);
@@ -128,6 +162,12 @@ test('price tick simulation preserves positive prices and applies GBM',()=>{
 
   const tickPositiveZ = simulatePriceTick(100, 0.20, 1/252, 1);
   assert.ok(tickPositiveZ.newPrice > 100);
+});
+test('seeded RNG makes simulated price ticks reproducible',()=>{
+  const first=mulberry32(42),second=mulberry32(42);
+  const a=simulatePriceTick(100,0.2,1/252,null,first);
+  const b=simulatePriceTick(100,0.2,1/252,null,second);
+  assert.deepEqual(a,b);
 });
 
 test('position calculator handles long, short, partial closes, and SL/TP triggers',()=>{
