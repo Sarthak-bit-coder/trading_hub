@@ -1,0 +1,1 @@
+KaTeX 0.16.21 (MIT, Khan Academy). Files copied from the npm package dist/: katex.min.css, katex.min.js, contrib/auto-render.min.js, fonts/*.woff2 only (woff/ttf omitted; browsers pick woff2 first). No CDN, no build step.
