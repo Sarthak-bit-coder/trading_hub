@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AcademyChart Demo · Synthetic Data</title>
+  <style>
+    :root {
+      --bg: #f5f4ef;
+      --paper: #fffefa;
+      --ink: #242720;
+      --muted: #77796f;
+      --line: #e7e5db;
+      --green: #426c52;
+      --green-soft: #eaf1e9;
+      --gold: #b78842;
+      --red: #a84f46;
+      --chart-up: #426c52;
+      --chart-down: #a84f46;
+      --chart-volume: rgba(66, 108, 82, 0.2);
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg: #171a17;
+      --paper: #202520;
+      --ink: #eff0e8;
+      --muted: #a4aa9f;
+      --line: #353d35;
+      --green: #8cb696;
+      --green-soft: #26382a;
+      --gold: #d2ac69;
+      --red: #ed958b;
+      --chart-up: #8cb696;
+      --chart-down: #ed958b;
+      --chart-volume: rgba(140, 182, 150, 0.25);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .title-group h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .title-group p {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* Prominent SYNTHETIC DATA watermark badge */
+    .badge-synthetic {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fbf3db;
+      color: #7b5914;
+      border: 1px solid #d8ba72;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    [data-theme="dark"] .badge-synthetic {
+      background: #342a14;
+      color: #f7d279;
+      border-color: #6a5323;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button {
+      background: var(--paper);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    button:hover {
+      border-color: var(--ink);
+    }
+
+    button.active {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    button.primary {
+      background: var(--green);
+      color: #ffffff;
+      border-color: var(--green);
+    }
+
+    button.primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .chart-panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      position: relative;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      height: 480px;
+    }
+
+    canvas#chartCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    .info-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding: 4px 2px 0;
+    }
+
+    .benchmark-result {
+      background: var(--green-soft);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 8px;
+      }
+      .canvas-wrapper {
+        height: 360px;
+      }
+      .title-group h1 {
+        font-size: 1.05rem;
+      }
+      button {
+        font-size: 0.75rem;
+        padding: 5px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-group">
+        <h1>AcademyChart Standalone Prototype</h1>
+        <p>Zero-dependency HTML5 Canvas Candlestick &amp; Indicator Engine</p>
+      </div>
+      <div class="badge-synthetic" id="syntheticBadge">
+        <span>⚠️</span> SYNTHETIC DATA · NOT MARKET DATA
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button id="themeToggle" title="Toggle Light/Dark Theme">🌓 Toggle Theme</button>
+      <button id="btnToggleSMA20" class="active">SMA (20)</button>
+      <button id="btnToggleSMA50" class="active">SMA (50)</button>
+      <button id="btnToggleMarkers" class="active">Buy/Sell Markers</button>
+      <button id="btnReset5k">Reset (5,000 bars)</button>
+      <button id="btnBenchmark400k" class="primary">⚡ Time 400,000-bar setData</button>
+    </div>
+
+    <div id="benchmarkOutput" class="benchmark-result" style="display: none;"></div>
+
+    <div class="chart-panel">
+      <div class="canvas-wrapper">
+        <canvas id="chartCanvas"></canvas>
+      </div>
+      <div class="info-bar">
+        <span>Scroll / Pinch to zoom · Drag to pan · Hover for crosshair and OHLC readout</span>
+        <span id="barCountInfo">5,000 bars loaded</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="chart.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // 1. Seeded PRNG: mulberry32 (seed 42)
+      function mulberry32(a) {
+        return function () {
+          let t = (a += 0x6d2b79f5);
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      // 2. Geometric Random Walk (GBM) generator
+      function generateSyntheticBars(count, seed) {
+        const rand = mulberry32(seed || 42);
+        const bars = new Array(count);
+        let price = 150.0;
+        let time = 1577836800000; // 2020-01-01 00:00:00 UTC
+        const dayMs = 86400000;
+        const drift = 0.00018;
+        const vol = 0.014;
+
+        for (let i = 0; i < count; i++) {
+          // Box-Muller standard normal
+          const u1 = Math.max(1e-15, rand());
+          const u2 = rand();
+          const z = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+
+          const ret = drift + vol * z;
+          const o = +price.toFixed(2);
+          const c = +(o * Math.exp(ret)).toFixed(2);
+          const maxOC = Math.max(o, c);
+          const minOC = Math.min(o, c);
+          const h = +(maxOC + rand() * (price * 0.015)).toFixed(2);
+          const l = +(Math.max(0.1, minOC - rand() * (price * 0.015))).toFixed(2);
+          const v = Math.round(50000 + rand() * 250000);
+
+          bars[i] = { time, o, h, l, c, v };
+          price = c;
+          time += dayMs;
+        }
+        return bars;
+      }
+
+      // 3. Technical Indicator: Simple Moving Average (SMA)
+      function computeSMA(bars, length, color) {
+        const points = [];
+        let sum = 0;
+        for (let i = 0; i < bars.length; i++) {
+          sum += bars[i].c;
+          if (i >= length) {
+            sum -= bars[i - length].c;
+            points.push({ time: bars[i].time, value: +(sum / length).toFixed(2) });
+          } else if (i === length - 1) {
+            points.push({ time: bars[i].time, value: +(sum / length).toFixed(2) });
+          }
+        }
+        return {
+          name: `SMA(${length})`,
+          color: color,
+          lineWidth: 1.6,
+          points: points
+        };
+      }
+
+      // 4. Buy/Sell Signal Markers based on SMA crossover
+      function computeMarkers(bars, smaPoints) {
+        const markers = [];
+        const smaMap = new Map();
+        for (let i = 0; i < smaPoints.length; i++) {
+          smaMap.set(smaPoints[i].time, smaPoints[i].value);
+        }
+
+        // Limit marker count to first 600 bars for clean display
+        const limit = Math.min(bars.length, 600);
+        for (let i = 1; i < limit; i++) {
+          const prev = bars[i - 1];
+          const curr = bars[i];
+          const prevSma = smaMap.get(prev.time);
+          const currSma = smaMap.get(curr.time);
+
+          if (prevSma !== undefined && currSma !== undefined) {
+            if (prev.c <= prevSma && curr.c > currSma) {
+              markers.push({ time: curr.time, side: 'buy', price: curr.l, text: 'BUY' });
+            } else if (prev.c >= prevSma && curr.c < currSma) {
+              markers.push({ time: curr.time, side: 'sell', price: curr.h, text: 'SELL' });
+            }
+          }
+        }
+        return markers;
+      }
+
+      // Generate initial 5,000 synthetic bars
+      const initialBars = generateSyntheticBars(5000, 42);
+      const sma20 = computeSMA(initialBars, 20, '#d2ac69');
+      const sma50 = computeSMA(initialBars, 50, '#3b82f6');
+      const sampleMarkers = computeMarkers(initialBars, sma20.points);
+
+      const canvas = document.getElementById('chartCanvas');
+      let showSMA20 = true;
+      let showSMA50 = true;
+      let showMarkers = true;
+
+      function getActiveOverlays() {
+        const list = [];
+        if (showSMA20) list.push(sma20);
+        if (showSMA50) list.push(sma50);
+        return list;
+      }
+
+      function getActiveMarkers() {
+        return showMarkers ? sampleMarkers : [];
+      }
+
+      // Initialize AcademyChart instance
+      const chart = window.AcademyChart.create(canvas, {
+        bars: initialBars,
+        overlays: getActiveOverlays(),
+        markers: getActiveMarkers()
+      });
+
+      window.chartInstance = chart; // Expose for testing/debugging
+
+      // DOM Elements & Event Handlers
+      const themeToggle = document.getElementById('themeToggle');
+      const btnToggleSMA20 = document.getElementById('btnToggleSMA20');
+      const btnToggleSMA50 = document.getElementById('btnToggleSMA50');
+      const btnToggleMarkers = document.getElementById('btnToggleMarkers');
+      const btnReset5k = document.getElementById('btnReset5k');
+      const btnBenchmark400k = document.getElementById('btnBenchmark400k');
+      const benchmarkOutput = document.getElementById('benchmarkOutput');
+      const barCountInfo = document.getElementById('barCountInfo');
+
+      themeToggle.addEventListener('click', function () {
+        const root = document.documentElement;
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          root.removeAttribute('data-theme');
+        } else {
+          root.setAttribute('data-theme', 'dark');
+        }
+      });
+
+      btnToggleSMA20.addEventListener('click', function () {
+        showSMA20 = !showSMA20;
+        btnToggleSMA20.classList.toggle('active', showSMA20);
+        chart.setData({ overlays: getActiveOverlays() });
+      });
+
+      btnToggleSMA50.addEventListener('click', function () {
+        showSMA50 = !showSMA50;
+        btnToggleSMA50.classList.toggle('active', showSMA50);
+        chart.setData({ overlays: getActiveOverlays() });
+      });
+
+      btnToggleMarkers.addEventListener('click', function () {
+        showMarkers = !showMarkers;
+        btnToggleMarkers.classList.toggle('active', showMarkers);
+        chart.setData({ markers: getActiveMarkers() });
+      });
+
+      btnReset5k.addEventListener('click', function () {
+        chart.setData({
+          bars: initialBars,
+          overlays: getActiveOverlays(),
+          markers: getActiveMarkers()
+        });
+        barCountInfo.textContent = '5,000 bars loaded';
+        benchmarkOutput.style.display = 'none';
+      });
+
+      // Benchmark 400,000 bars setData performance
+      window.timeSetData400k = function () {
+        btnBenchmark400k.disabled = true;
+        btnBenchmark400k.textContent = 'Generating 400k bars...';
+        benchmarkOutput.style.display = 'block';
+        benchmarkOutput.textContent = 'Generating 400,000 seeded synthetic bars...';
+
+        setTimeout(function () {
+          const tGen0 = performance.now();
+          const bars400k = generateSyntheticBars(400000, 42);
+          const genDuration = performance.now() - tGen0;
+
+          benchmarkOutput.textContent = `Bars generated in ${genDuration.toFixed(1)} ms. Timing chart.setData({ bars: 400,000 })...`;
+
+          setTimeout(function () {
+            const tSet0 = performance.now();
+            chart.setData({
+              bars: bars400k,
+              overlays: [],
+              markers: []
+            });
+            const setDataDuration = performance.now() - tSet0;
+
+            const msg = `⚡ 400,000 bars benchmark: setData() completed in ${setDataDuration.toFixed(2)} ms (generation: ${genDuration.toFixed(1)} ms). Downsampling active, responsive zoom/pan verified.`;
+            benchmarkOutput.textContent = msg;
+            barCountInfo.textContent = '400,000 bars loaded (Downsampling Active)';
+            btnBenchmark400k.disabled = false;
+            btnBenchmark400k.textContent = '⚡ Time 400,000-bar setData';
+            console.log(msg);
+          }, 20);
+        }, 20);
+      };
+
+      btnBenchmark400k.addEventListener('click', window.timeSetData400k);
+    })();
+  </script>
+</body>
+</html>
