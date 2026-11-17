@@ -47,3 +47,4 @@ body{line-height:1.65}.brand-mark{background:#111;color:#fff;border-radius:2px;f
 .vol-calc-box{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:14px;margin-top:14px}
 @media(max-width:900px){.risklens-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:550px){.risklens-grid{grid-template-columns:1fr}}
+fieldset{border:1px solid var(--line);border-radius:8px;padding:1rem;min-width:0}legend{padding:0 .4rem;font-weight:700}.li-more{margin:.35rem 0 .5rem 1rem;color:var(--muted)}.assumptions{display:flex;flex-wrap:wrap;gap:.6rem;padding:.8rem;margin:1rem 0;border:1px solid var(--line);border-radius:8px;background:var(--bg)}.assumptions span{font-size:.85rem}.synthetic-badge{background:#fff2cc;color:#7a4b00;font-weight:800}.academy-chart{display:block;width:100%;height:300px;touch-action:none}

@@ -1,6 +1,12 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {exposure,sizeLong,scoreQuiz,saveState,loadState,validateBackup,migrateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,mulberry32,simulatePriceTick,calcPositions}=require('../math.js');
+const {exposure,sizeLong,scoreQuiz,shuffleChoices,saveState,loadState,validateBackup,migrateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,mulberry32,simulatePriceTick,calcPositions}=require('../math.js');
+
+test('assessment option shuffle keeps correct answer mapped',()=>{
+  const result=shuffleChoices(['wrong A','correct','wrong B'].map((text,index)=>({text,index})),1,()=>0.5);
+  assert.deepEqual(result.options.map(option=>option.text),['wrong A','wrong B','correct']);
+  assert.equal(result.options[result.correct].text,'correct');
+});
 
 test('Part 1 starter example values',()=>{
   const x=exposure({equity:1000,entry:50000,quantity:.02,ratio:10,exit:49200,fees:2});

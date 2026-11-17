@@ -27,6 +27,7 @@
     return {errors:[],fits:true,raw,quantity,notional,plannedLoss,budgetPct:budget/equity*100,worseLoss,margin:marginRatio?notional/marginRatio:null};
   }
   function scoreQuiz(correctIndexes,answers){let score=0;correctIndexes.forEach((correct,i)=>{if(answers[i]===correct)score++});return {score,total:correctIndexes.length,passed:correctIndexes.length>0&&score===correctIndexes.length};}
+  function shuffleChoices(options,correct,random=Math.random){const shuffled=options.slice();for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}return {options:shuffled,correct:shuffled.findIndex(option=>option.index===correct)}}
   const BACKUP_VERSION=2,LESSON_COUNT=20;
   const clone=value=>typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value));
   const plainObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
@@ -300,7 +301,7 @@
     positions.totalNotional=totalNotional;
     return positions;
   }
-  const api={BACKUP_VERSION,exposure,sizeLong,scoreQuiz,saveState,loadState,migrateBackup,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,mulberry32,simulatePriceTick,calcPositions,cents,paperLedger};
+  const api={BACKUP_VERSION,exposure,sizeLong,scoreQuiz,shuffleChoices,saveState,loadState,migrateBackup,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,mulberry32,simulatePriceTick,calcPositions,cents,paperLedger};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.AcademyMath=api;
 })(typeof window!=='undefined'?window:globalThis);
