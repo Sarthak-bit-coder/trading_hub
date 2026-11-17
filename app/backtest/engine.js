@@ -28,23 +28,26 @@
     return bars;
   }
   function smaAt(bars,i,n){if(i<n-1)return null;let s=0;for(let j=i-n+1;j<=i;j++)s+=bars[j].c;return s/n}
-  function run({bars,smaLength=5,startEquity=10000,allocationPct=25,feeBps=1,slippageBps=2}){
-    if(!Array.isArray(bars)||bars.length<Number(smaLength)+2)throw new Error(`Need at least ${Number(smaLength)+2} valid bars for this SMA rule.`);
+  function run({bars,smaLength=5,strategy=null,startEquity=10000,allocationPct=25,feeBps=1,slippageBps=2,stopLossPct=null,targetPct=null,annualizationFactor=252,seed=1}){
+    if(!Array.isArray(bars)||(!strategy&&bars.length<Number(smaLength)+2)||strategy&&bars.length<2)throw new Error(`Need enough valid bars for this strategy.`);
     if(!Number.isInteger(+smaLength)||smaLength<2||!finite(startEquity)||startEquity<=0||!finite(allocationPct)||allocationPct<=0||allocationPct>100||!finite(feeBps)||feeBps<0||!finite(slippageBps)||slippageBps<0)throw new Error('Check strategy settings: SMA length ≥2, equity >0, allocation 0–100%, costs ≥0.');
+    const strategyBars=strategy?bars.map(bar=>Object.freeze({...bar})):null;
     let cash=Number(startEquity),position=null,pending=null;const trades=[],equity=[],signals=[];const costsBps=Number(feeBps)+Number(slippageBps);
+    let exposureBars=0,ambiguousStopTarget=false;
     for(let i=0;i<bars.length;i++){
       const b=bars[i];
       if(pending){
         const side=pending.side, slip=Number(slippageBps)/10000, fill=b.o*(side==='buy'?1+slip:1-slip);
-        if(side==='buy'&&!position){const budget=cash*Number(allocationPct)/100;const qty=budget/(fill*(1+Number(feeBps)/10000));const entryFee=qty*fill*Number(feeBps)/10000;position={qty,fill,time:b.time,entryBar:i,entryFee,signalTime:pending.signalTime};cash-=qty*fill+entryFee;}
+        if(side==='buy'&&!position){const budget=cash*Number(allocationPct)/100;const qty=budget/(fill*(1+Number(feeBps)/10000));const entryFee=qty*fill*Number(feeBps)/10000;position={qty,fill,time:b.time,entryBar:i,entryFee,signalTime:pending.signalTime,stop:stopLossPct==null?null:fill*(1-Number(stopLossPct)/100),target:targetPct==null?null:fill*(1+Number(targetPct)/100)};cash-=qty*fill+entryFee;}
         else if(side==='sell'&&position){const exitFee=position.qty*fill*Number(feeBps)/10000;const gross=position.qty*(fill-position.fill),net=gross-position.entryFee-exitFee;cash+=position.qty*fill-exitFee;trades.push({entryTime:position.time,exitTime:b.time,entrySignalTime:position.signalTime,entryPrice:position.fill,exitPrice:fill,quantity:position.qty,grossPnl:gross,fees:position.entryFee+exitFee,netPnl:net,barsHeld:i-position.entryBar});position=null;}
         pending=null;
       }
-      const prevSma=smaAt(bars,i-1,+smaLength),nowSma=smaAt(bars,i,+smaLength);
-      if(i>0&&prevSma!==null&&nowSma!==null){
-        if(!position&&bars[i-1].c<=prevSma&&b.c>nowSma){pending={side:'buy',signalTime:b.time};signals.push({time:b.time,side:'buy'})}
-        else if(position&&bars[i-1].c>=prevSma&&b.c<nowSma){pending={side:'sell',signalTime:b.time};signals.push({time:b.time,side:'sell'})}
-      }
+      if(position){exposureBars++;const stop=position.stop,target=position.target,stopHit=stop!=null&&b.l<=stop,targetHit=target!=null&&b.h>=target;if(stopHit||targetHit){if(stopHit&&targetHit)ambiguousStopTarget=true;const px=stopHit?Math.min(b.o,stop):Math.max(b.o,target),fee=position.qty*px*Number(feeBps)/10000,gross=position.qty*(px-position.fill),net=gross-position.entryFee-fee;cash+=position.qty*px-fee;trades.push({entryTime:position.time,exitTime:b.time,entrySignalTime:position.signalTime,entryPrice:position.fill,exitPrice:px,quantity:position.qty,grossPnl:gross,fees:position.entryFee+fee,netPnl:net,barsHeld:i-position.entryBar,ambiguousStopTarget:stopHit&&targetHit});position=null;}}
+      let side=null;
+      if(strategy){side=strategy.signal.call(strategy,{length:i+1,bar:k=>Number.isInteger(k)&&k>=0&&k<=i?strategyBars[k]:undefined,close:k=>Number.isInteger(k)&&k>=0&&k<=i?strategyBars[k].c:undefined});}
+      else {const prevSma=smaAt(bars,i-1,+smaLength),nowSma=smaAt(bars,i,+smaLength);if(i>0&&prevSma!==null&&nowSma!==null){
+        if(!position&&bars[i-1].c<=prevSma&&b.c>nowSma)side='buy';else if(position&&bars[i-1].c>=prevSma&&b.c<nowSma)side='sell';}}
+      if(side&&((side==='buy'&&!position)||(side==='sell'&&position))){pending={side,signalTime:b.time};signals.push({time:b.time,side})}
       const marked=position?cash+position.qty*b.c:cash;equity.push({time:b.time,value:marked});
     }
     const last=bars.at(-1);const openPosition=position?{quantity:position.qty,entryTime:position.time,entryPrice:position.fill,markPrice:last.c,entryFee:position.entryFee,unrealizedPnl:position.qty*(last.c-position.fill)-position.entryFee}:null;
@@ -53,8 +56,9 @@
     const grossGains=trades.filter(t=>t.netPnl>0).reduce((a,t)=>a+t.netPnl,0),grossLosses=Math.abs(trades.filter(t=>t.netPnl<0).reduce((a,t)=>a+t.netPnl,0));
     const firstBar=bars[0],lastBar=bars.at(-1),buyFill=firstBar.o*(1+Number(slippageBps)/10000),sellFill=lastBar.c*(1-Number(slippageBps)/10000),benchQty=(Number(startEquity)*Number(allocationPct)/100)/(buyFill*(1+Number(feeBps)/10000)),benchmarkEquity=Number(startEquity)-benchQty*buyFill-benchQty*buyFill*Number(feeBps)/10000+benchQty*sellFill-benchQty*sellFill*Number(feeBps)/10000;
     const estimatedExitFee=openPosition?openPosition.quantity*openPosition.markPrice*Number(feeBps)/10000:0;
-    return {barsCount:bars.length,trades,equity,signals,openPosition,finalEquity:equity.at(-1).value,netPnl:equity.at(-1).value-Number(startEquity),benchmarkEquity,benchmarkPnl:benchmarkEquity-Number(startEquity),maxDrawdown,winRate:trades.length?wins.length/trades.length:null,expectancy:trades.length?sum(trades)/trades.length:null,profitFactor:grossLosses?grossGains/grossLosses:null,feeBps:Number(feeBps),slippageBps:Number(slippageBps),smaLength:+smaLength,allocationPct:+allocationPct,startEquity:+startEquity,fees:trades.reduce((a,t)=>a+t.fees,0)+(openPosition?.entryFee||0),estimatedExitFee,unclosedSignal:pending,unrealizedPnl:openPosition?.unrealizedPnl||0};
+    const result={barsCount:bars.length,trades,equity,signals,openPosition,finalEquity:equity.at(-1).value,netPnl:equity.at(-1).value-Number(startEquity),benchmarkEquity,benchmarkPnl:benchmarkEquity-Number(startEquity),maxDrawdown,winRate:trades.length?wins.length/trades.length:null,expectancy:trades.length?sum(trades)/trades.length:null,profitFactor:grossLosses?grossGains/grossLosses:null,feeBps:Number(feeBps),slippageBps:Number(slippageBps),smaLength:+smaLength,allocationPct:+allocationPct,startEquity:+startEquity,fees:trades.reduce((a,t)=>a+t.fees,0)+(openPosition?.entryFee||0),estimatedExitFee,unclosedSignal:pending,unrealizedPnl:openPosition?.unrealizedPnl||0,exposureBars,ambiguousStopTarget};
+    if(root.BacktestMetrics){result.metrics=root.BacktestMetrics.calculate(result,{annualizationFactor,seed});}return result;
   }
   function csv(rows){const safe=x=>{let s=String(x??'');if(!/^-?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/i.test(s)&&/^[=+\-@\t\r]/.test(s))s="'"+s;return `"${s.replaceAll('"','""')}"`};return rows.map(r=>r.map(safe).join(',')).join('\r\n')}
-  const api={parseCSV,run,csv};if(typeof module!=='undefined'&&module.exports)module.exports=api;root.BacktestEngine=api;
+  const api={parseCSV,run,csv};if(typeof module!=='undefined'&&module.exports){api.strategies=require('./strategies.js');api.metrics=require('./metrics.js');module.exports=api;root.BacktestMetrics=api.metrics;root.BacktestStrategies=api.strategies;}root.BacktestEngine=api;
 })(typeof window!=='undefined'?window:globalThis);
