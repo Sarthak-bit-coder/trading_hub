@@ -20,7 +20,7 @@ Awaiting material: Part 5 — professional portfolio governance, compliance, Cal
 ## Lesson 5 — Multi-Asset Momentum & The Rotation Index
 ### Objective and prerequisites
 Master the construction of multi-asset momentum rotation models across diverse asset classes (Equities, Treasuries, Commodities, Crypto, and Memecoins) and apply ridge-regularized adjusted plus-minus (RAPM) principles from sports handicapping to eliminate factor collinearity and control turnover friction.
-Prerequisites: Lessons 1–4, compound return compounding, z-score normalization, and basic matrix multiplication.
+Prerequisites: Lessons 1–4, compound returns, z-score normalization, and basic matrix multiplication.
 
 ### Explanation and vocabulary
 Momentum describes the empirical tendency of assets with superior recent performance to continue outperforming over short-to-medium horizons.
@@ -48,7 +48,7 @@ Because teammates play together repeatedly, $X$ is severely collinear, making st
 
 The solution is Ridge Regression (Tikhonov Regularization):
 $(X^T W X + \lambda I) \beta = X^T W y$
-where $\lambda \ge 0$ is a shrinkage penalty selected via out-of-sample holdout validation (e.g., 20% game holdout in `Rotation-Index/model.py`). Ridge regression shrinks individual player coefficients toward zero (the prior belief of an average/replacement-level player), suppressing noise and isolating true marginal value.
+where $\lambda \ge 0$ is a shrinkage penalty selected on a holdout split (`pick_lambda` in `Rotation-Index/model.py` uses an 80/20 train/validation split). Ridge regression shrinks individual player coefficients toward zero (the prior belief of an average/replacement-level player), suppressing noise and isolating true marginal value.
 
 Application to Multi-Asset Rotation:
 When rotating assets across macro regimes, raw asset returns are similarly confounded by:
@@ -69,7 +69,7 @@ Raw rank: MEME (+80%) > BTC (+36%) > SPY (+12%) > TLT (-6%).
 A naive momentum strategy would allocate 100% of capital to MEME.
 
 Step 2: Volatility-Adjusted Momentum (Risk-Standardized):
-Compute Sharpe-style momentum scores assuming a risk-free rate of $R_f = 2\%$ (4% annualized over 6 months):
+Compute volatility-scaled momentum scores: 6-month excess return divided by annualized volatility, with a 6-month risk-free return of $R_f = 2\%$ (about 4% annualized). Because the return covers 6 months and the volatility is annual, these scores rank assets but are not Sharpe ratios; to make them comparable to a Sharpe ratio, scale volatility to the period ($\sigma \times \sqrt{0.5}$) or annualize the return.
 - SPY score: $(12\% - 2\%) / 14\% = 10 / 14 \approx 0.714$
 - TLT score: $(-6\% - 2\%) / 16\% = -8 / 16 = -0.500$
 - BTC score: $(36\% - 2\%) / 60\% = 34 / 60 \approx 0.567$
@@ -84,7 +84,7 @@ Assume round-trip execution cost (spread + slippage + fees):
 - SPY: 0.05% (5 bps)
 - BTC: 0.30% (30 bps)
 - MEME: 4.50% (450 bps, accounting for pool fees, price impact, and slippage)
-Net expected return of MEME after 12 monthly rotations: $12 \times 4.5\% = 54\%$ consumed solely by turnover friction!
+Cost drag on MEME after 12 monthly rotations: $1 - (1 - 0.045)^{12} \approx 42.5\%$ of capital consumed by turnover friction alone (simple addition, $12 \times 4.5\% = 54\%$, overstates it because each cost applies to a smaller balance).
 Ridge shrinkage penalizes noisy, high-turnover assets, correctly retaining capital in scalable, cost-efficient momentum leaders.
 
 ### Common mistakes
@@ -153,7 +153,7 @@ Value-at-Risk (VaR) and Conditional Value-at-Risk (CVaR):
   $\text{VaR}_{\alpha, \text{norm}} = -(\mu + z_\alpha \cdot \sigma)$
   where $z_\alpha$ is the standard normal critical value ($-1.645$ for 95%, $-2.326$ for 99%).
 
-The Cornish-Fisher Expansion (from `RiskLens/analytics/value_at_risk.py`):
+The Cornish-Fisher Expansion (from `RiskLens/src/risklens/analytics/value_at_risk.py`):
 When returns have sample skewness $s$ and sample excess kurtosis $k$, the Cornish-Fisher expansion adjusts the standard normal quantile $z_\alpha$ into an asymmetric, fat-tailed quantile $z_{\text{CF}}$:
 $$z_{\text{CF}} = z_\alpha + \frac{z_\alpha^2 - 1}{6} s + \frac{z_\alpha^3 - 3z_\alpha}{24} k - \frac{2z_\alpha^3 - 5z_\alpha}{36} s^2$$
 Cornish-Fisher VaR is then:
@@ -165,7 +165,7 @@ VaR only answers: "What is the minimum loss on bad days?" It tells you nothing a
 $$\text{CVaR}_\alpha = E[L \mid L \ge \text{VaR}_\alpha]$$
 CVaR is a coherent risk measure (satisfying subadditivity: risk of a portfolio is less than or equal to the sum of individual risks), whereas VaR is not.
 
-Volatility Forecasting & Sizing (from `RiskLens/analytics/volatility.py`):
+Volatility Forecasting & Sizing (from `RiskLens/src/risklens/analytics/volatility.py`):
 - RiskMetrics Exponentially Weighted Moving Average (EWMA):
   $$\sigma^2_t = \lambda \sigma^2_{t-1} + (1 - \lambda) r_t^2, \quad \text{with } \lambda = 0.94$$
   EWMA places exponential weighting on recent returns, reacting immediately to volatility spikes.
@@ -200,12 +200,12 @@ Step 2: Compute Cornish-Fisher Quantile Adjustment:
 Summing the terms for $z_{\text{CF}}$:
 $$z_{\text{CF}} = -1.644853 - 0.19898 + 0.07266 + 0.00920 \approx -1.76197$$
 Notice that $z_{\text{CF}}$ has shifted further into the adverse tail (from $-1.645$ to $-1.762$).
-(For a 99% VaR with $z = -2.326$, the shift is even more dramatic, expanding from $-2.326$ to $-2.985$!)
+(For a 99% VaR with $z = -2.326$ and the same $s = -0.70$, $k = 3.60$, the shift is larger: $z_{\text{CF}} \approx -3.498$.)
 
 Step 3: Compute Cornish-Fisher VaR:
 $$\text{VaR}_{\text{CF}} = -(0.0005 + (-1.76197) \times 0.015) = -(-0.02593) = +2.593\%$$
 In dollars: $\$2,593$.
-The naive Gaussian model underestimated the true tail risk by $\$176$ per day on 95% confidence, and by over $\$1,100$ per day on 99% confidence.
+The naive Gaussian model underestimated tail risk by about $\$176$ per day at 95% confidence. At 99% the gap is about $\$1,758$ per day (normal VaR $\$3,440$ versus Cornish-Fisher VaR $\$5,197$).
 
 Step 4: Dynamic Volatility Targeting:
 Target annualized volatility: $\sigma^* = 12\%$ (daily target $\sigma^*_{\text{day}} = 12\% / \sqrt{252} \approx 0.756\%$).
@@ -299,7 +299,7 @@ $$\text{Fee} = \text{Fee}_{\text{fixed}} + \text{Notional} \cdot \text{Fee}_{\te
 
 Paper Portfolio Accounting (from `vektor/backend/app/portfolio/accounting.py`):
 - Floating-Point Contamination: In financial programming, binary floating-point representations (IEEE 754 standard floats) introduce rounding drift (e.g. `0.1 + 0.2 = 0.30000000000000004`). Over thousands of trade iterations, stray fractions of cents accumulate, corrupting cash balances and performance reporting.
-- Pure Decimal Arithmetic: Robust execution engines use arbitrary-precision `Decimal` arithmetic with `ROUND_HALF_EVEN` (banker's rounding).
+- Pure Decimal Arithmetic: Robust execution engines use arbitrary-precision `Decimal` arithmetic with `ROUND_HALF_EVEN` (banker's rounding). This app's paper lab gets the same cent-exact result in JavaScript by storing money as integer cents.
 - Cent Conservation:
   - When selling a partial position of size $q_{\text{sell}}$ out of held $q_{\text{held}}$:
     $$\text{Cost Basis Removed} = \text{round}_{\text{cents}}\left(\text{Total Cost Basis} \times \frac{q_{\text{sell}}}{q_{\text{held}}}\right)$$
@@ -327,15 +327,15 @@ Step 2: Weekend Gap Down on Bar 3:
 Adverse earnings release over the weekend. Bar 3 opens Monday at $\$42.00$ (High $\$43.00$, Low $\$41.00$, Close $\$42.50$).
 The stop order at $\$47.50$ is triggered immediately at market open!
 Execution sell price:
-$$\text{Fill Price} = \max(42.00 \times (1 - 0.001), 41.00) = \$41.958 \to \$41.95$$
-- Notional: $100 \times \$41.95 = \$4,195.00$
-- Fee: $\$1.00 + (\$4,195.00 \times 0.0005) = \$1.00 + \$2.10 = \$3.10$
-- Net Cash Proceeds: $\$4,195.00 - \$3.10 = \$4,191.90$
-- New Cash Balance: $\$4,991.50 + \$4,191.90 = \$9,183.40$
-- Realized Net Loss: Net Proceeds $(\$4,191.90) - \text{Cost Basis} (\$5,008.50) = -\$816.60$.
-- Actual Account Drawdown: $\$816.60 / \$10,000 = 8.17\%$.
+$$\text{Fill Price} = \max(42.00 \times (1 - 0.001), 41.00) = \$41.958 \to \$41.96 \text{ (nearest cent)}$$
+- Notional: $100 \times \$41.96 = \$4,196.00$
+- Fee: $\$1.00 + (\$4,196.00 \times 0.0005) = \$1.00 + \$2.098 \to \$3.10$
+- Net Cash Proceeds: $\$4,196.00 - \$3.10 = \$4,192.90$
+- New Cash Balance: $\$4,991.50 + \$4,192.90 = \$9,184.40$
+- Realized Net Loss: Net Proceeds $(\$4,192.90) - \text{Cost Basis} (\$5,008.50) = -\$815.60$.
+- Actual Account Drawdown: $\$815.60 / \$10,000 = 8.16\%$.
 
-Notice: Intended risk was $\$258.50$ ($2.59\%$), but the gap produced an $\$816.60$ loss ($8.17\%$). This demonstrates why planned stop loss is never a guaranteed ceiling.
+Notice: Intended risk was $\$258.50$ ($2.59\%$), but the gap produced an $\$815.60$ loss ($8.16\%$). This demonstrates why planned stop loss is never a guaranteed ceiling.
 
 ### Common mistakes
 1. Filling market orders at the exact bar close where the signal occurred (lookahead bias).
@@ -344,7 +344,7 @@ Notice: Intended risk was $\$258.50$ ($2.59\%$), but the gap produced an $\$816.
 4. Failing to model execution fees and slippage, transforming what is actually a net losing strategy into an illusory backtest winner.
 
 ### Resources
-- `vektor` repository (`materials/external_repos/vektor/backend/app/backtest/engine.py` and `portfolio/accounting.py`): examination of `simulate()`, `fill_order()`, and `to_cents()`.
+- `vektor` repository: examination of `simulate()` in `backend/app/backtest/engine.py`, and of `fill_order()` and `to_cents()` in `backend/app/portfolio/accounting.py` (both under `materials/external_repos/vektor/`).
 - Harris, L. (2003). *Trading and Exchanges: Market Microstructure for Practitioners*. Oxford University Press.
 - Kissell, R. (2013). *The Science of Algorithmic Trading and Portfolio Management*. Academic Press.
 
@@ -400,7 +400,8 @@ When ranking parameter combinations on training data, the objective function det
 - Total Return: prone to selecting high-risk, unhedged outlier bets.
 - Maximum Drawdown: favors strategies that barely trade.
 - Annualized Sharpe Ratio: measures excess return per unit of total risk:
-  $$\text{Sharpe} = \frac{R_p - R_f}{\sigma_p} \cdot \sqrt{252}$$
+  $$\text{Sharpe}_{\text{annual}} = \frac{\bar{r}_{\text{daily}} - r_{f,\text{daily}}}{\sigma_{\text{daily}}} \cdot \sqrt{252}$$
+  Use $\sqrt{252}$ only with a daily mean and daily standard deviation (use 365 for assets that trade every day, such as crypto). If $R_p$ and $\sigma_p$ are already annualized, the ratio is simply $(R_p - R_f) / \sigma_p$.
 - Calmar Ratio: Annualized Return divided by Absolute Maximum Drawdown.
 
 Walk-Forward Analysis (WFA):
@@ -419,7 +420,8 @@ When comparing in-sample training metrics to out-of-sample test metrics, the `ve
    $$\text{Train Return} > 0 \ge \text{Test Return}$$
    The strategy generated profits in-sample but lost money or broke even out-of-sample.
 2. `sharpe_decay`:
-   $$\text{Test Sharpe} < \frac{\text{Train Sharpe}}{2} \quad \text{or Test Sharpe is undefined}$$
+   Applies only when Train Sharpe is defined and $> 0$; it then fires if
+   $$\text{Test Sharpe} < \frac{\text{Train Sharpe}}{2} \quad \text{(strict), or Test Sharpe is undefined}$$
    The out-of-sample risk-adjusted return collapsed by more than 50% relative to training performance.
 3. `few_trades`:
    $$\text{Closed Trades}_{\text{train}} < 5$$
@@ -433,12 +435,12 @@ When comparing in-sample training metrics to out-of-sample test metrics, the `ve
 Multiple Testing Penalties & Deflated Sharpe Ratio:
 When $N$ independent trials are conducted, the expected maximum Sharpe ratio from pure noise with zero true skill is approximately:
 $$E[\max(SR)] \approx \sqrt{2 \ln(N)}$$
-If an analyst tests 100 random variations ($N = 100$), pure luck is expected to produce an illusory Sharpe ratio of $\sqrt{2 \ln(100)} \approx \sqrt{9.21} \approx 3.03$!
+This is in standard-error units: the expected maximum of $N$ standard-normal test statistics, not an annualized Sharpe ratio. If an analyst tests 100 independent variations ($N = 100$), the best one is expected to sit about $\sqrt{2 \ln(100)} \approx 3.03$ standard errors above zero by luck alone. In Sharpe terms that depends on sample length: the standard error of an annualized Sharpe ratio is roughly $1/\sqrt{\text{years}}$, so with 2 years of data luck alone can produce an annualized Sharpe near $3.03 / \sqrt{2} \approx 2.1$.
 The Deflated Sharpe Ratio (Bailey and López de Prado) statistically adjusts the observed Sharpe ratio for the number of trials, sample length, skewness, and kurtosis.
 
 ### Worked example
-An analyst tests an SMA crossover strategy on daily Bitcoin data over a 4-year calendar (1,000 bars):
-- Chronological split: 75% train (750 bars, 2021–2023), 25% test (250 bars, 2024).
+An analyst tests an SMA crossover strategy on 1,000 consecutive daily Bitcoin bars (Bitcoin trades every day, so this covers about 2.7 calendar years):
+- Chronological split: 75% train (first 750 bars, about 2.05 years), 25% test (last 250 bars, about 8 months).
 - Grid dimensions:
   - Fast SMA: $[5, 10, 15, 20, 25]$ (5 values)
   - Slow SMA: $[30, 50, 100, 150, 200]$ (5 values)
@@ -454,7 +456,7 @@ Grid Search Result on Training Data (Top Candidate):
   - Closed Trades: 28 trades
 
 Out-of-Sample (Holdout Test) Evaluation on Candidate #1:
-- The parameters $(5, 30)$ are executed on the untouched 2024 test data:
+- The parameters $(5, 30)$ are executed on the untouched test data (last 250 bars):
   - Total Return: $-8.4\%$
   - Annualized Sharpe Ratio: $-0.25$
   - Maximum Drawdown: $-26.2\%$
@@ -501,7 +503,7 @@ Despite an impressive backtest showing $+142\%$ return and a $1.95$ Sharpe ratio
 3. Rank candidates on the train set by Sharpe ratio, then test the #1 candidate on the test set.
 4. Formally evaluate the 5 `vektor` overfitting flags:
    - Check if return reversed.
-   - Check if Sharpe decayed by $>50\%$.
+   - If Train Sharpe is defined and $>0$: check if Test Sharpe is strictly below half of Train Sharpe, or undefined.
    - Check if training closed trades $<5$.
    - Check if any parameter sits on the grid boundary.
    - Count candidate combinations ($>50$).
@@ -597,7 +599,7 @@ Session 4 (60 minutes): Execute parameter grid search with chronological holdout
 ## Part 2 resource library
 QR1: `materials/external_repos/Rotation-Index` — Regularized Adjusted Plus-Minus (RAPM) model and possession-weighted ridge regression engine.
 QR2: `materials/external_repos/RiskLens` — Full portfolio risk analytics: Cornish-Fisher VaR/CVaR, EWMA/GARCH volatility forecasting, Kupiec backtesting, and Equal Risk Contribution optimization.
-QR3: `materials/external_repos/vektor` — Vectorized and event-driven backtesting engine, decimal portfolio accounting, chronological train/test splits, and overfitting detection reports.
+QR3: `materials/external_repos/vektor` — Event-driven backtesting engine, decimal portfolio accounting, chronological train/test splits, and overfitting detection reports.
 QR4: Asness, Moskowitz, & Pedersen (2013) — "Value and Momentum Everywhere", *Journal of Finance*.
 QR5: Bailey, Borwein, López de Prado, & Zhu (2014) — "Pseudo-Mathematics and Financial Charlatanism: The Effects of Backtest Overfitting", *Notices of the AMS*.
 QR6: Harris (2003) — *Trading and Exchanges: Market Microstructure for Practitioners*, Oxford University Press.

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff"><title>Trading Research Academy</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="vendor/katex/katex.min.css"><link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="shell">
@@ -13,7 +13,7 @@
         <a href="#home" data-view="home" data-nav-group="learn">⌂ <span>Start here</span></a>
         <details class="nav-group" data-nav-group="learn" open>
           <summary class="side-label">LEARN <span aria-hidden="true">⌄</span></summary>
-          <a href="#course" data-view="course" data-nav-group="learn">▤ <span>Course map</span><i>4</i></a>
+          <a href="#course" data-view="course" data-nav-group="learn">▤ <span>Course map</span><i>20</i></a>
           <a href="#assessment" data-view="assessment" data-nav-group="learn">✓ <span>Part 1 assessment</span></a>
           <a href="#lesson/1" data-view="lesson" data-nav-group="learn">◫ <span>Lesson reader</span></a>
           <a href="#glossary" data-view="glossary" data-nav-group="learn">⌕ <span>Glossary & search</span></a>
@@ -29,6 +29,7 @@
           <a href="#pretrade" data-view="pretrade" data-nav-group="practice">☑ <span>Pre-trade checklist</span></a>
           <a href="#paper" data-view="paper" data-nav-group="practice">▥ <span>Paper trading lab</span></a>
           <a href="#journal" data-view="journal" data-nav-group="practice">▧ <span>Trading journal</span></a>
+          <a href="#research-journal" data-view="research-journal" data-nav-group="practice">▨ <span>Research journal</span></a>
           <a href="#passport" data-view="passport" data-nav-group="practice">▣ <span>Product passport</span></a>
         </details>
         <details class="nav-group" data-nav-group="research">
@@ -50,6 +51,6 @@
     </main>
   </div>
   <div id="toast" role="status" aria-live="polite"></div>
-  <script src="math.js"></script><script src="backtest/engine.js"></script><script src="backtest/providers.js"></script><script src="app.js"></script><script src="backtest/ui.js"></script>
+  <script src="vendor/katex/katex.min.js"></script><script src="vendor/katex/contrib/auto-render.min.js"></script><script src="math.js"></script><script src="backtest/engine.js"></script><script src="backtest/providers.js"></script><script src="app.js"></script><script src="backtest/ui.js"></script><script src="views.js"></script>
 </body>
 </html>

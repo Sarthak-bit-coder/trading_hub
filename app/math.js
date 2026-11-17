@@ -27,20 +27,26 @@
     return {errors:[],fits:true,raw,quantity,notional,plannedLoss,budgetPct:budget/equity*100,worseLoss,margin:marginRatio?notional/marginRatio:null};
   }
   function scoreQuiz(correctIndexes,answers){let score=0;correctIndexes.forEach((correct,i)=>{if(answers[i]===correct)score++});return {score,total:correctIndexes.length,passed:correctIndexes.length>0&&score===correctIndexes.length};}
-  const BACKUP_VERSION=2,LESSON_COUNT=8;
+  const BACKUP_VERSION=2,LESSON_COUNT=20;
   const clone=value=>typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value));
   const plainObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
   function saveState(storage,key,value){storage.setItem(key,JSON.stringify(value));}
   function loadState(storage,key,defaults){
     const base=clone(defaults);
-    try{const saved=JSON.parse(storage.getItem(key)||'{}');return plainObject(saved)?{...base,...saved}:base}catch{return base}
+    try{
+      const saved=JSON.parse(storage.getItem(key)||'{}');if(!plainObject(saved))return base;
+      const out={...base,...saved};
+      // A saved value whose shape differs from its default (corrupt or hand-edited storage) falls back to the default instead of crashing the UI.
+      for(const k of Object.keys(base)){const d=base[k],v=out[k];if(Array.isArray(d)?!Array.isArray(v):plainObject(d)?!plainObject(v):typeof d!==typeof v)out[k]=d}
+      return out;
+    }catch{return base}
   }
   function migrateBackup(backup){
     if(!plainObject(backup)||!plainObject(backup.data)||![1,2].includes(backup.version))return null;
     return {...backup,version:BACKUP_VERSION,data:clone(backup.data)};
   }
   function validateBackup(o){
-    const migrated=migrateBackup(o),d=migrated?.data,required=['read','practiced','assignments','passed','mastered','bookmarks','journal','passport','strategy','friend','paperTrades','watchlist','customLessons'],extra=['misconceptions','researchInbox','savedQuestions','experiments','assistantMemory','btPaperOrders','paperEquityCurve'];
+    const migrated=migrateBackup(o),d=migrated?.data,required=['read','practiced','assignments','passed','mastered','bookmarks','journal','passport','strategy','friend','paperTrades','watchlist','customLessons'],extra=['misconceptions','researchInbox','savedQuestions','experiments','assistantMemory','btPaperOrders','paperEquityCurve','researchJournal'];
     if(!migrated||required.some(k=>!Array.isArray(d[k]))||extra.some(k=>k in d&&!Array.isArray(d[k]))||!d.notes||typeof d.notes!=='object'||Array.isArray(d.notes)||!d.studyPlan||typeof d.studyPlan!=='object'||Array.isArray(d.studyPlan)||!['light','dark'].includes(d.theme)||!Number.isFinite(d.equity)||d.equity<=0)return false;
     if([...d.read,...d.practiced,...d.assignments,...d.passed,...d.mastered,...d.bookmarks].some(n=>!Number.isInteger(n)||n<1||n>LESSON_COUNT))return false;
     if(d.journal.length>10000||d.passport.length>1000||d.strategy.length>1000||d.friend.length>1000||d.paperTrades.length>10000||d.watchlist.length>200||d.customLessons.length>500)return false;
@@ -52,10 +58,14 @@
     if((d.misconceptions||[]).length>1000||(d.researchInbox||[]).length>5000||(d.savedQuestions||[]).length>5000||(d.experiments||[]).length>5000||(d.assistantMemory||[]).length>10)return false;
     if(!(d.misconceptions||[]).every(x=>x&&typeof x.concept==='string'&&x.concept.length<=300&&typeof x.note==='string'&&x.note.length<=5000))return false;
     if(!(d.researchInbox||[]).every(x=>x&&typeof x.creator==='string'&&x.creator.length<=500&&typeof x.url==='string'&&/^https?:\/\//i.test(x.url)&&typeof x.claim==='string'&&x.claim.length<=5000&&typeof x.excerpt==='string'&&x.excerpt.length<=10000))return false;
-    if(!(d.savedQuestions||[]).every(x=>x&&typeof x.text==='string'&&x.text.length<=5000&&Number.isInteger(+x.lesson)&&+x.lesson>=1&&+x.lesson<=LESSON_COUNT))return false;
+    if(!(d.savedQuestions||[]).every(x=>x&&typeof x.text==='string'&&x.text.length<=5000&&Number.isInteger(+x.lesson)&&+x.lesson>=1&&+x.lesson<=LESSON_COUNT&&(x.due===undefined||(typeof x.due==='string'&&/^\d{4}-\d\d-\d\d$/.test(x.due)))))return false;
     if(!(d.experiments||[]).every(x=>x&&typeof x.version==='string'&&typeof x.hash==='string'&&Number.isFinite(+x.netPnl)))return false;
     if(!(d.assistantMemory||[]).every(x=>typeof x==='string'&&x.length<=2000))return false;
-    if((d.btPaperOrders||[]).length>10000||!(d.btPaperOrders||[]).every(x=>x&&['buy','sell'].includes(x.side)&&/^[A-Z0-9.^=-]{1,15}$/.test(x.symbol)&&['filled','rejected'].includes(x.status)&&Number.isFinite(+x.qty)&&+x.qty>0&&Number.isFinite(+x.price)&&+x.price>0&&Number.isFinite(+x.executionTime)))return false;
+    if((d.btPaperOrders||[]).length>10000||!(d.btPaperOrders||[]).every(x=>x&&['buy','sell'].includes(x.side)&&/^[A-Z0-9.^=-]{1,15}$/.test(x.symbol)&&['filled','rejected'].includes(x.status)&&Number.isFinite(+x.qty)&&+x.qty>0&&Number.isFinite(+x.price)&&+x.price>0&&[x.executionTime,x.signalTime].every(t=>typeof t==='number'&&Math.abs(t)<=8.64e15)))return false;
+    if((d.researchJournal||[]).length>5000||!(d.researchJournal||[]).every(x=>x&&typeof x==='object'&&!Array.isArray(x)&&Object.values(x).every(v=>v==null||typeof v==='number'||(typeof v==='string'&&v.length<=20000))))return false;
+    if('quizAttempts' in d&&(!plainObject(d.quizAttempts)||Object.entries(d.quizAttempts).some(([k,v])=>!(+k>=1&&+k<=LESSON_COUNT)||!Array.isArray(v)||v.length>500||!v.every(a=>a&&Number.isFinite(+a.score)&&Number.isFinite(+a.total)))))return false;
+    if('checklist' in d&&(!d.checklist||typeof d.checklist!=='object'||Array.isArray(d.checklist)))return false;
+    if('displayName' in d&&(typeof d.displayName!=='string'||d.displayName.length>60))return false;
     if('paperEquityCurve' in d&&(!Array.isArray(d.paperEquityCurve)||d.paperEquityCurve.length>10000))return false;
     if('btPaperStartingEquity' in d&&(!Number.isFinite(+d.btPaperStartingEquity)||+d.btPaperStartingEquity<=0))return false;
     if('testConsumed' in d&&typeof d.testConsumed!=='boolean')return false;
