@@ -209,6 +209,6 @@ calcSizing=function(){_calcSizing();const s=state.lastSizing;if(!s||$('#sizeResu
 function sendSizingToPaper(){const s=state.lastSizing;state.ticketDraft={qty:s.quantity,sl:s.stop,entry:s.entry};save();location.hash='#paper'}
 function sendSizingToJournal(){const s=state.lastSizing;location.hash='#journal';setTimeout(()=>journalForm(-1,{paper_or_live:'paper',equity_before:s.equity,planned_loss_budget:s.budget,entry_planned:s.entry,stop_planned:s.stop,quantity:s.quantity}),0)}
 
-function render(v,arg){const views={home,course,lesson,assessment,exposure,sizing,orders,paper,pretrade,journal,passport,testing,friend,backtest,assistant,inbox,misconceptions,'research-journal':researchJournal,resources:resourcePage,glossary,study,settings,custom:customLessonPage};(Object.hasOwn(views,v)?views[v]:home)(arg)}
+function render(v,arg){const views={home,course,lesson,assessment,exposure,sizing,orders,paper,pretrade,journal,passport,testing,friend,backtest,assistant,inbox,misconceptions,'research-journal':researchJournal,resources:resourcePage,glossary,study,settings,custom:customLessonPage,...(window.AuthViews||{})};(Object.hasOwn(views,v)?views[v]:home)(arg)}
 
 init();

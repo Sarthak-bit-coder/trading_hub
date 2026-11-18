@@ -59,6 +59,10 @@ Using a $5-per-index-point contract multiplier and 0.25-point tick, one tick is 
 Confusing ticker labels with legal rights; ignoring multiplier or expiry; assuming a margin deposit buys the underlying; assuming all BTC products are spot.
 ### Resources
 R3 Introduction to Futures; R4 Micro E-mini product overview.
+
+- Robinhood, [Strategies FAQ](https://robinhood.com/us/en/support/articles/strategies-faq/) and [investment approach](https://robinhood.com/us/en/support/articles/strategies-investment-approach/) (Retrieved 2026-11-17). A worked product-passport example: a managed portfolio run by an SEC-registered adviser, not a self-directed signal. Note who decides trades, the 0.25% yearly fee, the $50 minimum and the $500 threshold for individual stocks.
+- Robinhood, [Strategies charts](https://robinhood.com/us/en/support/articles/strategies-charts/) and [investing tools](https://robinhood.com/us/en/support/articles/investing-tools/) (Retrieved 2026-11-17). The return chart is a simple return net of the management fee that ignores compounding and deposits. Ask what a chart's "return" includes before comparing it with anything.
+
 ### Assignment
 Complete a product passport for one stock/ETF and one derivative using primary specifications. Include symbol, venue, product type, unit, multiplier, minimum size, tick, session/timezone, expiry, settlement, custody, costs, eligibility, margin and source URL. Mark gaps UNKNOWN.
 ### Quiz
