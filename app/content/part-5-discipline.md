@@ -123,7 +123,7 @@ The behavioral-finance research cited here covers retail equity investors, prima
 
 ## Lesson 18 — U.S. and California Consumer Safeguards
 ### Objective and prerequisites
-Identify the four U.S. regulators most relevant to retail traders (FINRA, SEC, CFPB, California DFPI), describe the protections each provides, explain the current status of the pattern day trader rule after FINRA Regulatory Notice 26-10, and use official lookup tools to verify registration and check complaint records.
+Identify the four U.S. regulators most relevant to retail traders (FINRA, SEC, CFPB, California DFPI), describe the protections each provides, explain the status of amended FINRA Rule 4210 day-trading margin provisions, and use official lookup tools to verify registration and check complaint records.
 
 Prerequisites: Lessons 1–4 (products, margin, orders). Lesson 15 (controls). No legal background required.
 
@@ -136,7 +136,7 @@ Prerequisites: Lessons 1–4 (products, margin, orders). Lesson 15 (controls). N
 - Margin rules: FINRA Rule 4210 sets minimum margin requirements for equity positions. The rule text is at https://www.finra.org/rules-guidance/rulebook/finra-rules/4210. (See resources-notes.md: `finra-rule-4210`.)
 - Trading violations: FINRA publishes guidance on free-riding, good-faith violations, and the $2,000 minimum equity requirement for margin accounts. (Source: FINRA, "Intraday Trading Basics for Investors." See resources-notes.md: `finra-intraday-trading-basics`.)
 
-**The pattern day trader rule — current status as of 2026.** FINRA Regulatory Notice 26-10, effective 2026-06-04, replaced the previous pattern day trader (PDT) designation with intraday margin standards. The old rule required a minimum of $25,000 equity for accounts flagged as pattern day traders (defined as four or more day trades in five business days). FINRA RN 26-10 replaced that framework with a new intraday margin standard; firms may phase in the new rules until 2027-10-20. (Source: resources-notes.md, "Critical content update: the PDT rule is gone," citing FINRA Regulatory Notice 26-10, 2026-04-20. **Verify the full text of RN 26-10 at https://www.finra.org/rules-guidance/notices/26-10 before citing in any materials outside this course.** The specific mechanics of the replacement intraday margin standard are not reproduced here because they require reading the full regulatory text.)
+**The pattern day trader rule — current status as of 2026.** FINRA amended Rule 4210 to replace the pattern-day-trader designation and day-trading margin provisions with intraday margin standards, effective June 4, 2026. The former framework defined a pattern day trader as a customer making four or more day trades in five business days and generally required $25,000 minimum equity. Firms may phase in compliance through October 20, 2027. This is FINRA rule filing SR-FINRA-2025-017, approved by SEC Release 34-105226; the notice URL cited in the prior draft is not the controlling source. Read: https://www.finra.org/rules-guidance/rule-filings/sr-finra-2025-017 and https://www.sec.gov/files/rules/sro/finra/2026/34-105226.pdf.)
 
 Important transition caveat: individual broker-dealers may continue applying the old $25,000 minimum or stricter house rules during the transition period or permanently. Contact your specific broker to confirm which rules apply to your account. (Source: resources-notes.md.)
 
@@ -173,7 +173,7 @@ Vocabulary:
 - NFA: National Futures Association; SRO for futures and forex dealers.
 - SRO (self-regulatory organization): a private organization authorized by law to write and enforce rules for its members, subject to SEC oversight.
 - BrokerCheck: FINRA's public database of broker and firm registration and disciplinary history.
-- Pattern day trader (PDT): the former FINRA designation for accounts with four or more day trades in five business days. Replaced by FINRA RN 26-10, effective 2026-06-04.
+- Pattern day trader (PDT): the former FINRA designation for accounts with four or more day trades in five business days; replaced by amended Rule 4210, effective June 4, 2026.
 - Intraday margin standard: the replacement framework under FINRA RN 26-10. Full mechanics require reading the regulatory notice.
 - Reg T: Federal Reserve Regulation T; sets initial margin requirements for securities purchases.
 - Maintenance margin: the minimum equity percentage required to maintain an open position; enforced by FINRA Rule 4210 and broker house rules.
@@ -203,7 +203,7 @@ $4,000 < $6,000 → margin call triggered
 The broker issues a margin call requiring the account to be brought up to the maintenance minimum. The trader must deposit funds or liquidate positions. If not resolved within the broker's deadline, the broker may liquidate positions without further notice. (Source: FINRA guidance on margin calls — see resources-notes.md: `finra-margin-calls`.) All numbers are hypothetical.
 
 **Scenario C — PDT rule transition.**
-A California retail trader asks their broker in mid-2026 whether the $25,000 PDT minimum still applies. The broker confirms it is still applying the old rule as a house rule during the FINRA RN 26-10 transition period. The trader checks https://www.finra.org/rules-guidance/notices/26-10 to understand the transition timeline. [**Unverified**: the full text and exact intraday margin mechanics of RN 26-10 were not fully reviewed in course preparation; verify at finra.org/rules-guidance/notices/26-10 before relying on any specific mechanics.]
+A California retail trader asks whether the $25,000 PDT minimum still applies in 2026. The broker explains its transition schedule under amended FINRA Rule 4210. Firms may phase in the new intraday margin standards through October 20, 2027. The trader checks FINRA SR-FINRA-2025-017 and the SEC approval order.
 
 **Scenario D — recognizing an AI trading bot scam.**
 A trader receives a social-media advertisement for an AI-powered trading bot that claims 300% annual returns with zero risk. The trader:
@@ -221,7 +221,7 @@ The trader does not invest. (Source: CFTC advisory — see resources-notes.md: `
 
 ### Resources
 - FINRA, BrokerCheck. https://brokercheck.finra.org (see resources-notes.md: `brokercheck` — verify URL at finra.org)
-- FINRA, Regulatory Notice 26-10, 2026-04-20. https://www.finra.org/rules-guidance/notices/26-10 (see resources-notes.md: `finra-rn-26-10`) — **verify full text at finra.org before relying on any specific mechanics**
+- FINRA SR-FINRA-2025-017: https://www.finra.org/rules-guidance/rule-filings/sr-finra-2025-017; SEC approval order 34-105226: https://www.sec.gov/files/rules/sro/finra/2026/34-105226.pdf
 - FINRA, "Intraday Trading Basics for Investors." https://www.finra.org/investors/learn-to-invest/advanced-investing/day-trading (see resources-notes.md: `finra-intraday-trading-basics`)
 - FINRA, margin calls guidance. https://www.finra.org/investors/learn-to-invest/advanced-investing/margin-statistics (see resources-notes.md: `finra-margin-calls`)
 - FINRA Rule 4210. https://www.finra.org/rules-guidance/rulebook/finra-rules/4210 (see resources-notes.md: `finra-rule-4210`)
@@ -238,19 +238,19 @@ The trader does not invest. (Source: CFTC advisory — see resources-notes.md: `
 ### Assignment
 1. Use FINRA BrokerCheck to look up any two publicly listed broker-dealers. For each, record: registration status, number of disclosures, and what types of disclosures appear (if any). Write a paragraph interpreting what you found — not whether the broker is "good," but what the record shows and what it does not show.
 2. Using the hypothetical margin scenario (Scenario B), recalculate the margin call threshold if the maintenance margin requirement were 30% instead of 25%. Show your work.
-3. Write a one-paragraph summary of FINRA Regulatory Notice 26-10, based on reading the notice directly at https://www.finra.org/rules-guidance/notices/26-10. Record the date you read it and note any mechanics that differ from the description in this lesson.
+3. Write a one-paragraph summary of FINRA SR-FINRA-2025-017 based on the filing and SEC approval order linked in this lesson. Record the date and explain the transition timeline.
 4. For a hypothetical California trader receiving a social-media advertisement for an automated trading bot, write a step-by-step due-diligence checklist using all four regulators covered in this lesson. What would each regulator's lookup or resource tell you?
 
 ### Quiz
 1. Which FINRA tool allows the public to check a broker-dealer's registration status and disciplinary history? A) NFA Basic B) BrokerCheck C) DFPI Scam Tracker D) SEC EDGAR
-2. FINRA Regulatory Notice 26-10, effective 2026-06-04, replaced which rule? A) The wash-sale rule B) The pattern day trader $25,000 minimum and 4-trades-in-5-days designation C) Regulation T initial margin D) The best-execution standard
+2. FINRA Rule 4210 amendments, effective 2026-06-04, replaced which rule? A) The wash-sale rule B) The pattern day trader $25,000 minimum and 4-trades-in-5-days designation C) Regulation T initial margin D) The best-execution standard
 3. Which regulator would a California retail investor contact about an investment scam involving a California-licensed money transmitter? A) CFPB B) NFA C) DFPI D) CFTC
 4. A broker continues applying the $25,000 PDT minimum after 2026-06-04. Is this permitted? A) No; brokers must immediately adopt the new intraday margin standard B) Yes; brokers may apply stricter house rules during and after the transition period C) No; the SEC prohibited it D) Yes; the old rule is still federal law
 5. The SEC's 2022 investor alert warns retail traders about which practice? A) Using limit orders B) Relying on hypothetical, back-tested performance results as predictors of future results C) Filing FINRA complaints D) Trading futures without NFA registration
 
 ### Answers
 1. B — BrokerCheck is FINRA's public broker and firm lookup tool. (Source: finra.org/brokercheck.)
-2. B — FINRA RN 26-10 replaced the pattern day trader $25,000 minimum and the 4-trades-in-5-days designation with an intraday margin standard, effective 2026-06-04. (Source: resources-notes.md: `finra-rn-26-10`.) [**Unverified**: full mechanics require reading the notice at finra.org/rules-guidance/notices/26-10.]
+2. B — FINRA amended Rule 4210 to replace the PDT framework with intraday margin standards, effective June 4, 2026. (SR-FINRA-2025-017; SEC Release 34-105226.)
 3. C — The DFPI is California's state financial regulator for consumer financial products not exclusively covered by federal law.
 4. B — Brokers may apply stricter house rules during the transition period (until 2027-10-20) or permanently. (Source: resources-notes.md.)
 5. B — The SEC warned on 2022-09-15 that hypothetical, back-tested performance results have inherent limitations and should not be used to predict future results. (Source: `sec-performance-claims`.)
@@ -283,17 +283,17 @@ For most active retail traders, positions are held less than one year, so gains 
 
 **Wash-sale rule.** A wash sale occurs when a trader sells a security at a loss and, within 30 days before or after the sale, buys the same or a "substantially identical" security. The loss from a wash sale is disallowed for tax purposes; instead, it is added to the cost basis of the replacement security. The IRS defines this rule in Section 1091 of the Internal Revenue Code and in Publication 550. (Source: IRS Publication 550, 2025. See resources-notes.md: `irs-pub-550`.)
 
-The wash-sale rule applies to stocks, bonds, and options on the same security. As of the 2025 publication, the rule does not explicitly apply to cryptocurrencies under IRS guidance, but legislation may change this. [**Unverified**: the applicability of the wash-sale rule to digital assets is subject to legislative and regulatory change; verify current IRS guidance at irs.gov before relying on this point.]
+Wash-sale rules apply to stocks and securities. IRS guidance says they generally apply to digital assets that are also stock or securities for tax purposes, such as tokenized securities. The rule generally does not apply to cryptocurrency that is not stock or a security under current federal tax law; verify classification and current law. (IRS Schedule D instructions: https://www.irs.gov/instructions/i1040sd)
 
 **Form 8949 — Sales and Other Dispositions of Capital Assets.** Every sale of a capital asset — including stocks, bonds, options, and certain crypto transactions — must be reported on Form 8949. The form requires: description of asset, date acquired, date sold, proceeds, cost basis, adjustments (including wash-sale adjustments), and resulting gain or loss. The totals from Form 8949 flow to Schedule D. (Source: IRS Form 8949 instructions. Verify current version at irs.gov.)
 
 Brokers are required to report most stock and ETF transactions on Form 1099-B, which provides the information needed to complete Form 8949. Basis reporting requirements have expanded over time; older positions or transferred accounts may have missing basis information that the taxpayer must reconstruct.
 
-**Section 1256 contracts.** Futures contracts (and certain forex transactions and broad-based index options) regulated by the CFTC are treated as Section 1256 contracts. Under Section 1256, positions are marked to market at year-end (even if not sold), and all gains and losses receive a 60/40 split: 60% long-term and 40% short-term, regardless of holding period. This treatment can be favorable for short-term traders in futures compared to equity traders. (Source: IRS Form 6781, "Gains and Losses From Section 1256 Contracts and Straddles" — see resources-notes.md: `irs-form-6781`. The 60/40 split is stated in the form instructions; the specific form-instructions text was not reviewed in course preparation — [**partially unverified**: verify the current 60/40 treatment at irs.gov/form6781].)
+**Section 1256 contracts.** Section 1256 covers regulated futures contracts, foreign currency contracts, nonequity options, dealer equity options, and dealer securities futures contracts. Covered contracts are marked to market at year-end; gains and losses generally receive a 60% long-term and 40% short-term split regardless of holding period. Some instruments that resemble broad-based index options do not qualify. (IRS Form 6781 (2025): https://www.irs.gov/pub/irs-pdf/f6781.pdf)
 
-**Trader tax status and the 475(f) election.** The IRS distinguishes investors, traders, and dealers. A "trader in securities" who meets specific activity and frequency tests may elect mark-to-market accounting under Section 475(f), which converts capital gains and losses to ordinary income and loss, avoids the wash-sale rule, and allows loss deductions without the $3,000 capital loss limitation. The election is irrevocable for the tax year in which it is made and must be made by the original due date of the prior year's return. (Source: IRS Topic No. 429, "Traders in Securities." See resources-notes.md: `irs-topic-429`. [**Partially unverified**: specific activity tests and election mechanics require reading Topic 429 and consulting a tax professional; not reproduced here.])
+**Trader tax status and the 475(f) election.** The IRS distinguishes investors, traders, and dealers. A "trader in securities" who meets specific activity and frequency tests may elect mark-to-market accounting under Section 475(f), which converts capital gains and losses to ordinary income and loss, avoids the wash-sale rule, and allows loss deductions without the $3,000 capital loss limitation.  Traders must meet IRS activity tests. A timely valid election generally makes covered gains and losses ordinary and removes wash-sale and capital-loss limits for covered trading securities. Election is due by the prior-year return due date, without extensions; late elections generally are not allowed. Securities held for investment are excluded. (IRS Topic 429: https://www.irs.gov/taxtopics/tc429)
 
-**Digital assets and broker reporting.** The IRS requires taxpayers to report income from digital-asset transactions. Starting with the 2025 tax year, centralized digital-asset brokers are subject to expanded 1099-DA reporting requirements under the Infrastructure Investment and Jobs Act, as implemented by IRS regulations. (Source: IRS, digital assets tax guidance — see resources-notes.md: `irs-digital-assets`. [**Unverified**: the exact scope and effective date of 1099-DA reporting requirements are subject to IRS rulemaking and legal challenges; verify at irs.gov before relying on this point.])
+**Digital assets and broker reporting.** The IRS requires taxpayers to report income from digital-asset transactions. Brokers in scope report gross proceeds for covered digital-asset transactions on or after January 1, 2025; basis reporting applies to certain transactions on or after January 1, 2026. Coverage depends on broker and transaction type. Form 1099-DA is current, not proposed. (IRS: https://www.irs.gov/filing/digital-assets; https://www.irs.gov/forms-pubs/about-form-1099-da)
 
 Vocabulary:
 - Short-term capital gain: gain from a position held one year or less; taxed at ordinary income rates.
@@ -305,7 +305,7 @@ Vocabulary:
 - Form 1099-B: broker-issued statement of securities sales, basis, and proceeds; used to complete Form 8949.
 - Section 1256 contract: a futures contract or certain options on broad-based indexes; subject to 60/40 mark-to-market tax treatment.
 - Section 475(f) election: an optional election allowing traders in securities to use mark-to-market accounting; requires meeting activity tests and filing by the prior-year return deadline.
-- 1099-DA: proposed IRS form for digital-asset broker reporting.
+- 1099-DA: IRS information return for reportable digital-asset broker proceeds.
 - Basis: the original cost of an asset, adjusted for certain events, used to compute gain or loss.
 - Cost basis adjustment (wash sale): the disallowed loss is added to the basis of the replacement security.
 
@@ -336,8 +336,8 @@ The $1,000 BBB loss is disallowed this year. The adjusted basis of the replaceme
 ### Common mistakes
 1. Ignoring wash sales because "the broker will track it." Brokers track wash sales within a single account; they may not track cross-account wash sales. Cross-account situations require the taxpayer to track manually.
 2. Assuming that futures gains are always better taxed than equity gains. The 60/40 split is favorable for short-term traders, but it also means that long-term losses are split 60/40, which may be less favorable in some cases. The analysis depends on individual circumstances.
-3. Treating a 475(f) election as a simple decision. The election is irrevocable for the year in which it is made and must be filed before the prior year's return deadline. Making or missing the election has multi-year consequences.
-4. Failing to report digital-asset transactions. The IRS has stated that digital-asset transactions are taxable, and the 1099-DA reporting regime is expanding. All taxable digital-asset dispositions must be reported.
+3. Treating a 475(f) election as simple. It changes accounting methods and generally requires a timely election plus Form 3115; consult a tax professional before filing.
+4. Assuming Form 1099-DA covers every broker or supplies basis in every case. Reporting phases in, and taxpayers remain responsible for reporting taxable transactions.
 5. Using this lesson as tax advice. It is not. The examples use round numbers that do not represent any real tax situation. Consult a qualified tax professional.
 
 ### Resources
@@ -362,9 +362,9 @@ The $1,000 BBB loss is disallowed this year. The adjusted basis of the replaceme
 ### Answers
 1. B — The wash-sale rule disallows the loss when the same security is repurchased within 30 days before or after the sale at a loss; the disallowed loss is added to the cost basis of the replacement shares. (Source: IRS Publication 550.)
 2. B — A position held more than one year qualifies for long-term capital gains rates. (Source: IRS Publication 550.)
-3. C — Section 1256 contracts receive a 60% long-term / 40% short-term split on all gains and losses, regardless of holding period. (Source: IRS Form 6781 instructions — [**partially unverified**: verify at irs.gov/form6781].)
+3. C — Section 1256 contract gains and losses are generally split 60% long-term and 40% short-term, regardless of holding period. (IRS Form 6781.)
 4. C — Form 8949 is used to report individual capital asset sales; totals flow to Schedule D.
-5. B — The Section 475(f) election must be made by the original due date of the prior year's return; it cannot be made retroactively. (Source: IRS Topic No. 429 — [**partially unverified**: verify at irs.gov/taxtopics/tc429].)
+5. B — The election is generally due by the prior-year return due date without extensions; late elections generally are not allowed. (IRS Topic 429.)
 
 ### Mastery checkpoint
 Without referring to the lesson, explain: (1) what a wash sale is, and compute the adjusted basis for a hypothetical replacement position with a $200 disallowed loss on a $500 basis; (2) the difference in tax treatment between a stock held 364 days and one held 366 days; (3) why a retail futures trader might face a different effective tax rate than a retail equity trader on the same dollar gain. For item 3, cite the relevant IRS form or code section.
@@ -443,7 +443,7 @@ Dimension 4 — Execution realism. The backtest fills at closing price; no sprea
 
 Dimension 5 — Controls and automation. All four controls are listed; a 30-day paper-run plan is included. Score: 3.
 
-Dimension 6 — Regulatory and tax awareness. The designer identifies U.S. equity securities (SEC/FINRA jurisdiction), confirms the account has sufficient equity to avoid PDT issues under the current FINRA RN 26-10 framework, and notes that gains will be short-term (held < 1 year) and taxed as ordinary income. Score: 3.
+Dimension 6 — Regulatory and tax awareness. The designer identifies U.S. equity securities (SEC/FINRA jurisdiction), confirms the account meets its applicable intraday margin requirements under amended FINRA Rule 4210, and notes that gains will be short-term (held < 1 year) and taxed as ordinary income. Score: 3.
 
 Dimension 7 — Psychology and process discipline. A one-page process document is provided. The designer names overconfidence and recency bias as personal risks and identifies a 15% drawdown as the review trigger. Score: 3.
 
@@ -469,7 +469,7 @@ The designer revises and resubmits. The re-run with $0.01/share commission and a
 - SEC, "Investor Alert: Be Cautious of Performance Claims Based on Hypothetical or Simulated Results," 2022-09-15. (See resources-notes.md: `sec-performance-claims`.) Directly relevant to dimension 2: a reviewer should apply the SEC's framing when assessing backtest integrity.
 - Barber, B.M. and Odean, T., "Trading Is Hazardous to Your Wealth," 2000. (See resources-notes.md: `barber-odean-hazardous`.) Background for dimension 7: behavioral costs of overconfidence.
 - Bailey, D.H. and López de Prado, M., "The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest Overfitting and Non-Normality," *Journal of Portfolio Management*, 40(5), 2014. https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551 (see resources-notes.md: `deflated-sharpe-ratio`.) Background for dimension 2: why reported Sharpe ratios overstate true performance.
-- FINRA, Regulatory Notice 26-10, 2026-04-20. https://www.finra.org/rules-guidance/notices/26-10 (see resources-notes.md: `finra-rn-26-10`.) Background for dimension 6: current PDT-rule status.
+- FINRA SR-FINRA-2025-017: https://www.finra.org/rules-guidance/rule-filings/sr-finra-2025-017; SEC approval order 34-105226: https://www.sec.gov/files/rules/sro/finra/2026/34-105226.pdf
 - IRS Publication 550, 2025. https://www.irs.gov/publications/p550 (see resources-notes.md: `irs-pub-550`.) Background for dimension 6: capital gains and wash-sale awareness.
 
 ### Assignment
@@ -488,7 +488,7 @@ The designer revises and resubmits. The re-run with $0.01/share commission and a
 4. A trader with $10,000 in a hypothetical account uses 2:1 margin to buy $20,000 of a hypothetical stock that falls 30%. What is the approximate loss as a percentage of the trader's equity? A) 30% B) 50% C) 60% D) 100%
 
 **Part 2 questions:**
-5. A strategy has an annualized Sharpe ratio of 0.5. Approximately how many years of live trading are required for a one-sided t-test to establish statistical significance at the 5% level? A) 1 year B) About 4 years C) About 16 years D) About 25 years
+5. Under a simplified independent-return model, a strategy has a Sharpe ratio of 0.5. Roughly how many years reach a one-sided 5% t-statistic threshold? A) 1 year B) About 4 years C) About 11 years D) About 25 years
 6. Which of the following is the most direct definition of look-ahead bias in a backtest? A) Using a data set with survivorship bias B) Using future data in a simulation as if it were known at the time of the trade C) Overfitting parameters to in-sample data D) Failing to subtract transaction costs
 7. The Kelly criterion applied at full Kelly maximizes long-run geometric growth, but in practice traders often use half-Kelly or less. Which of these is the primary reason? A) Half-Kelly maximizes arithmetic return B) Full Kelly leads to a maximum drawdown of 100% in the worst case C) Full Kelly is not computable D) Half-Kelly is required by FINRA Rule 4210
 8. A strategy's backtest shows a maximum drawdown of 20%. Its annualized return is 15%. What is its Calmar ratio? A) 1.33 B) 0.75 C) 3.00 D) 0.33
@@ -507,7 +507,7 @@ The designer revises and resubmits. The re-run with $0.01/share commission and a
 
 **Part 5 questions:**
 17. Which regulator should a retail trader contact to verify that a U.S. broker-dealer is registered? A) CFPB B) DFPI C) FINRA (via BrokerCheck) D) NFA
-18. Under FINRA Regulatory Notice 26-10, effective 2026-06-04, what replaced the pattern day trader $25,000 minimum equity requirement? A) A $10,000 minimum B) Intraday margin standards C) A ban on day trading for retail investors D) SEC Rule 15c3-3
+18. Under amended FINRA Rule 4210, effective 2026-06-04, what replaced the pattern day trader $25,000 minimum equity requirement? A) A $10,000 minimum B) Intraday margin standards C) A ban on day trading for retail investors D) SEC Rule 15c3-3
 19. A trader sells stock at a $500 loss on October 1 and buys the same stock on October 20. What tax rule applies? A) The Section 1256 mark-to-market rule B) The wash-sale rule, disallowing the $500 loss C) The long-term capital gains rate D) Section 475(f) ordinary income treatment
 20. A hypothetical strategy presentation shows a Sharpe ratio of 2.5 based solely on in-sample backtested data with no out-of-sample test. According to the peer-review rubric in Lesson 20 and the SEC's 2022 investor alert, what is the most appropriate reviewer response? A) Accept the result as compelling performance evidence B) Score dimension 2 as 1 or 2 and require an out-of-sample test before passing C) Recommend immediate live deployment D) Score the full rubric as 24
 
@@ -519,7 +519,7 @@ The designer revises and resubmits. The re-run with $0.01/share commission and a
 4. C — The $20,000 position falls 30% = $6,000 loss. Loss as % of $10,000 equity = 60%.
 
 **Part 2:**
-5. B — For a Sharpe ratio of 0.5, approximately SR² × (z²) years are needed; for SR = 0.5 and p < 0.05 (z ≈ 1.65): minimum ~(1.65/0.5)² ≈ 10.9 years. Approximately 4 years is the closest option for a one-tailed test at a less conservative threshold; the exact number depends on assumptions. [**Unverified**: the exact formula varies by source; Part 2 covers this in detail. The answer of "about 4 years" is a rough classroom heuristic — verify against Part 2 materials.] Answer: B.
+5. C — Under the simplified independent-return approximation, t = Sharpe × square root of years. A one-sided 5% threshold z ≈ 1.645 gives years ≈ (1.645/0.5)^2 = 10.82; option C (about 11 years). Estimate depends on assumptions.
 6. B — Look-ahead bias is using future data in a simulation as if it were known at trade time.
 7. B — Full Kelly sizing can result in a 100% drawdown in extreme scenarios; half-Kelly reduces ruin risk while still growing geometrically.
 8. B — Calmar ratio = 15% / 20% = 0.75.
@@ -527,7 +527,7 @@ The designer revises and resubmits. The re-run with $0.01/share commission and a
 **Part 3:**
 9. B — Bid-ask spread = $50.05 − $49.95 = $0.10.
 10. B — Walking up the order book by exhausting the best offer is market impact.
-11. B — Reg NMS Order Protection Rule (Rule 611) requires trades to be executed at the NBBO or better; it prohibits trade-throughs. [**Partially unverified**: the exact Reg NMS provision referenced; verify at sec.gov/fast-answers.]
+11. B — Rule 611 prohibits trade-throughs of protected quotations, subject to exceptions. The SEC proposed rescinding it in June 2026; as of November 17, 2026, that proposal is not final. (https://www.sec.gov/rules-regulations/2026/06/s7-2026-20)
 12. C — A market-on-close order executes at the closing auction price.
 
 **Part 4:**
@@ -538,7 +538,7 @@ The designer revises and resubmits. The re-run with $0.01/share commission and a
 
 **Part 5:**
 17. C — FINRA BrokerCheck verifies broker-dealer registration. (Lesson 18.)
-18. B — FINRA RN 26-10 replaced the $25,000 PDT minimum with intraday margin standards, effective 2026-06-04. (Source: resources-notes.md: `finra-rn-26-10`.) [**Unverified**: specific mechanics of the intraday margin standard require reading the full notice at finra.org/rules-guidance/notices/26-10.]
+18. B — FINRA amended Rule 4210 to replace the PDT framework with intraday margin standards, effective June 4, 2026. (SR-FINRA-2025-017; SEC Release 34-105226.)
 19. B — Repurchasing the same security within 30 days of a loss triggers the wash-sale rule. (IRS Publication 550.)
 20. B — An in-sample-only Sharpe ratio scores dimension 2 at 1 or 2; the SEC's 2022 alert specifically warns against relying on back-tested results without out-of-sample validation. (Sources: `sec-performance-claims`; Lesson 20 rubric, dimension 2.)
 
@@ -556,7 +556,7 @@ The Part 5 assessment is integrated into Lesson 20's graduation assessment (20 q
 **Suggested sequence after completing the graduation assessment:**
 1. If score ≥ 15/20: continue to paper testing (Part 4, Lesson 16) using the process document from Lesson 17.
 2. If score < 15/20: return to the Part(s) with the most incorrect answers and re-read the relevant lessons.
-3. All learners: verify the FINRA RN 26-10 mechanics at finra.org/rules-guidance/notices/26-10 and the IRS digital-asset guidance at irs.gov before treating Lessons 18 and 19 as current.
+3. All learners: check FINRA SR-FINRA-2025-017 and current IRS digital-asset guidance before relying on Lessons 18 and 19.
 
 ---
 
@@ -570,7 +570,7 @@ The following resources are referenced in Part 5 lessons. All URLs should be ver
 
 ### U.S. regulatory safeguards
 - FINRA BrokerCheck: https://brokercheck.finra.org
-- FINRA Regulatory Notice 26-10 (PDT replacement, effective 2026-06-04): https://www.finra.org/rules-guidance/notices/26-10 [**verify before citing**]
+- FINRA SR-FINRA-2025-017 (Rule 4210 day-trading margin replacement): https://www.finra.org/rules-guidance/rule-filings/sr-finra-2025-017; SEC approval: https://www.sec.gov/files/rules/sro/finra/2026/34-105226.pdf
 - FINRA Intraday Trading Basics: https://www.finra.org/investors/learn-to-invest/advanced-investing/day-trading
 - FINRA Rule 4210 (margin): https://www.finra.org/rules-guidance/rulebook/finra-rules/4210
 - FINRA Margin Calls guidance: https://www.finra.org/investors/learn-to-invest/advanced-investing/margin-statistics

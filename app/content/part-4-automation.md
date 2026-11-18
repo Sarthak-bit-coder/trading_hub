@@ -381,7 +381,6 @@ Operator creates the file `controls/KILL` from a separate terminal. The monitori
 ### Resources
 - Interactive Brokers, "TWS API — Connecting" (IBKR Campus). Paper port 7497 and Read-Only flag. The Read-Only flag prevents order submission and is useful for testing kill-switch connectivity without accidentally placing orders. https://ibkr.info/node/1711 (see resources-notes.md: `ibkr-tws-api-config`)
 - U.S. CFTC, "Artificial Intelligence (Super Intelligence) Trading Bots" consumer advisory. Describes systems marketed as automated that lack verifiable controls; contrasts with the control design in this lesson. https://www.cftc.gov/LearnAndProtect/AdvisoriesAndArticles/fraudadv_SITradingBots.html (see resources-notes.md: `cftc-ai-trading-bots`)
-- U.S. SEC, "Staff Bulletin: Sales Practices for Investment Advisers — Use of AI and Automation" [unverified: title and URL not confirmed in resources-notes.md; verify at sec.gov before citing in materials]. Relevant background on control expectations.
 
 ### Assignment
 1. For a hypothetical system trading two symbols, write the complete control-configuration block: max daily loss limit, position limit per symbol, gross-exposure limit, kill-flag path, and audit-log path. Explain how you chose each number.
