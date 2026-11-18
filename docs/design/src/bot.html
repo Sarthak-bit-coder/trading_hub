@@ -1,0 +1,59 @@
+<!--HEIGHT:990--><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Building a trading bot · Trading Research Academy</title><link rel="stylesheet" href="../base.css">
+<style>
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:16px}
+.pipe div{border:1px solid var(--line);border-left:0;padding:12px;background:var(--panel);font-size:14px}
+.pipe div:first-child{border-left:1px solid var(--line);border-radius:8px 0 0 8px}.pipe div:last-child{border-radius:0 8px 8px 0}
+.pipe div.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.pipe small{display:block;color:var(--muted);font-weight:400;margin-top:2px}
+pre{font:13px/1.55 var(--mono);background:var(--sunk);border-radius:8px;padding:12px 14px;overflow:hidden;white-space:pre-wrap}
+</style></head>
+<body><div class="shell"><!--SIDEBAR:bot-->
+<div class="main">
+  <header class="top"><div class="crumb">Research / <b>Building a trading bot</b></div><div class="search">Search lessons and glossary <span class="kbd">Ctrl K</span></div></header>
+  <main class="page">
+    <h1>Building a trading bot</h1>
+    <p class="lede">How three real projects were built, stage by stage: where the data comes from, how it is checked, the math, the tests, and what each one cannot do.</p>
+
+    <div class="pipe"><div class="on">Data<small>source, cleaning</small></div><div>Signal<small>the rule</small></div><div>Sizing &amp; risk<small>how much</small></div><div>Execution<small>fills, costs</small></div><div>Accounting<small>cash, P/L</small></div><div>Monitoring<small>limits, logs</small></div></div>
+
+    <div class="grid g3" style="margin-top:20px;align-items:start">
+      <section class="card stack">
+        <div class="spread"><h3>Vektor</h3><span class="tag">no license</span></div>
+        <p class="small muted">Local paper-only workspace for researching strategies on historical prices.</p>
+        <dl class="kv small"><dt>Data</dt><dd>Daily OHLCV</dd><dt>Storage</dt><dd>Local cache</dd><dt>Our use</dt><dd>Described only</dd></dl>
+        <p class="small">No license file, so lessons describe how it works and cite it, but never copy its code.</p>
+      </section>
+      <section class="card stack">
+        <div class="spread"><h3>RiskLens</h3><span class="tag">MIT</span></div>
+        <p class="small muted">Portfolio risk engine: volatility, VaR, drawdown and factor exposure.</p>
+        <dl class="kv small"><dt>Data</dt><dd>Prices + factor CSVs</dd><dt>Tests</dt><dd>pytest suite</dd><dt>Our use</dt><dd>Code with credit</dd></dl>
+      </section>
+      <section class="card stack">
+        <div class="spread"><h3>Rotation-Index</h3><span class="tag">MIT</span></div>
+        <p class="small muted">An NBA lineup-impact model, not a market model.</p>
+        <dl class="kv small"><dt>Data</dt><dd>Play-by-play</dd><dt>Method</dt><dd>Ridge regression</dd><dt>Our use</dt><dd>Teaches holdouts</dd></dl>
+      </section>
+    </div>
+
+    <section class="card stack" style="margin-top:16px">
+      <div class="spread"><h2>Stage 1 · Data</h2><span class="muted small">Case study: RiskLens</span></div>
+      <p>Before any signal, a bot needs prices it can trust. RiskLens loads daily closes, aligns every asset to the same dates, and drops any date where a price is missing instead of filling it in.</p>
+      <div class="grid g2" style="align-items:start">
+        <div class="stack">
+          <h3>What to check</h3>
+          <ul class="small" style="padding-left:18px;line-height:1.8">
+            <li>Dates are sorted and unique</li><li>High ≥ open and close; low ≤ both</li><li>No silent forward-fill across missing days</li><li>Splits and dividends: adjusted or not, written down</li><li>Source and download date recorded with the data</li>
+          </ul>
+        </div>
+        <div><h3>Excerpt (MIT, RiskLens)</h3><pre># src/risklens/data.py, line 86
+prices = close[tickers].dropna()
+
+# line 237
+return prices.astype(float).pct_change().dropna(how="all")</pre><p class="muted small" style="margin-top:6px">Rows with any missing close are dropped, not filled.</p></div>
+      </div>
+      <p class="small muted">In this app, the same checks run when you import a CSV or load Kraken, Alpha Vantage or CoinGecko data in the Backtesting lab.</p>
+    </section>
+
+    <p class="muted small" style="margin-top:20px">Part 10 lessons are planned. This page will link each stage to its lesson once the lessons are written and fact-checked.</p>
+  </main>
+</div></div></body></html>

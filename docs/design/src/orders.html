@@ -1,0 +1,15 @@
+<!--HEIGHT:900--><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Order practice · Trading Research Academy</title><link rel="stylesheet" href="../base.css"><style>
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}.field .in{border:1px solid var(--line);border-radius:6px;padding:7px 10px;font:14px var(--mono);background:var(--panel)}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);font-size:15px}.check:first-child{border-top:0}
+.box{flex:none;width:18px;height:18px;border:1.5px solid var(--line-strong);border-radius:4px;margin-top:2px}.box.on{background:var(--accent);border-color:var(--accent)}
+.opt{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:15px;margin-top:8px;background:var(--panel)}
+.big{font:500 24px var(--mono)}</style></head>
+<body><div class="shell"><!--SIDEBAR:orders-->
+<div class="main"><header class="top"><div class="crumb">Practice / <b>Order practice</b></div><div class="search">Search lessons and glossary <span class="kbd">Ctrl K</span></div></header>
+<main class="page"><h1>Order practice</h1><p class="lede">Short scenarios: pick the order type that controls what matters in each one. Answers are shuffled.</p><div style="margin-top:24px">
+<div class="grid" style="grid-template-columns:minmax(0,1fr) 300px;align-items:start">
+<section class="card stack"><span class="muted small">Scenario 4 of 8</span>
+<h2>You want to buy only if the price breaks above $105, and you will not pay more than $106. Which order fits?</h2>
+<div class="opt">Market order</div><div class="opt">Limit buy at $105</div><div class="opt" style="border-color:var(--up);background:#eef7f1">Stop-limit buy: stop $105, limit $106 <span class="small" style="color:var(--up)">Correct</span></div><div class="opt">Stop-market buy at $105</div>
+<p class="small muted">A stop-limit triggers at $105 and refuses fills above $106. A stop-market order triggers too, but on a gap it can fill well above $106.</p></section>
+<aside class="card stack"><h3>Your results</h3><dl class="kv small"><dt>Correct</dt><dd>3 / 3</dd><dt>Remaining</dt><dd>5</dd></dl></aside></div></div></main></div></div></body></html>

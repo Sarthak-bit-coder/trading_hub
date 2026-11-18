@@ -1,0 +1,13 @@
+<!--HEIGHT:900--><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Risk sizing · Trading Research Academy</title><link rel="stylesheet" href="../base.css"><style>
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}.field .in{border:1px solid var(--line);border-radius:6px;padding:7px 10px;font:14px var(--mono);background:var(--panel)}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);font-size:15px}.check:first-child{border-top:0}
+.box{flex:none;width:18px;height:18px;border:1.5px solid var(--line-strong);border-radius:4px;margin-top:2px}.box.on{background:var(--accent);border-color:var(--accent)}
+.opt{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:15px;margin-top:8px;background:var(--panel)}
+.big{font:500 24px var(--mono)}</style></head>
+<body><div class="shell"><!--SIDEBAR:risk-->
+<div class="main"><header class="top"><div class="crumb">Practice / <b>Risk sizing</b></div><div class="search">Search lessons and glossary <span class="kbd">Ctrl K</span></div></header>
+<main class="page"><h1>Risk sizing</h1><p class="lede">Size a position from the most you are willing to lose, not from your buying power.</p><div style="margin-top:24px">
+<div class="grid g2" style="align-items:start">
+<section class="card stack"><h3>Inputs</h3><div class="grid g2"><div class="field"><label>Account equity</label><div class="in">$10,000</div></div><div class="field"><label>Risk per trade</label><div class="in">1.0%</div></div><div class="field"><label>Entry price</label><div class="in">$254.00</div></div><div class="field"><label>Stop price</label><div class="in">$248.00</div></div><div class="field"><label>Fees per side</label><div class="in">$1.00</div></div><div class="field"><label>Max position</label><div class="in">25% of equity</div></div></div></section>
+<section class="card stack"><h3>Result</h3><dl class="kv"><dt>Planned loss</dt><dd>$100.00</dd><dt>Risk per share</dt><dd>$6.00</dd><dt>Shares, before cap</dt><dd>16</dd><dt>Position value</dt><dd>$4,064.00</dd><dt>Capped by 25% limit</dt><dd>9 shares</dd><dt>Loss at stop, with fees</dt><dd class="down">−$56.00</dd></dl>
+<div class="note">The 25% position cap binds here, so you risk $56 instead of the planned $100.</div></section></div></div></main></div></div></body></html>

@@ -1,0 +1,15 @@
+<!--HEIGHT:960--><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Exposure explorer · Trading Research Academy</title><link rel="stylesheet" href="../base.css"><style>
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}.field .in{border:1px solid var(--line);border-radius:6px;padding:7px 10px;font:14px var(--mono);background:var(--panel)}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);font-size:15px}.check:first-child{border-top:0}
+.box{flex:none;width:18px;height:18px;border:1.5px solid var(--line-strong);border-radius:4px;margin-top:2px}.box.on{background:var(--accent);border-color:var(--accent)}
+.opt{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:15px;margin-top:8px;background:var(--panel)}
+.big{font:500 24px var(--mono)}</style></head>
+<body><div class="shell"><!--SIDEBAR:exposure-->
+<div class="main"><header class="top"><div class="crumb">Practice / <b>Exposure explorer</b></div><div class="search">Search lessons and glossary <span class="kbd">Ctrl K</span></div></header>
+<main class="page"><h1>Exposure explorer</h1><p class="lede">Change quantity and prices to see how exposure, margin and loss relate. A simple long-only model, not a product quote.</p><div style="margin-top:24px">
+<div class="grid g2" style="align-items:start">
+<section class="card stack"><h3>Position</h3><div class="grid g2"><div class="field"><label>Account equity</label><div class="in">$1,000</div></div><div class="field"><label>Quantity</label><div class="in">0.020 BTC</div></div><div class="field"><label>Entry price</label><div class="in">$50,000</div></div><div class="field"><label>Notional-to-margin</label><div class="in">10 : 1</div></div><div class="field"><label>Stop price</label><div class="in">$49,500</div></div><div class="field"><label>Fees</label><div class="in">$2.00</div></div></div></section>
+<section class="card stack"><h3>Result</h3><dl class="kv"><dt>Notional exposure</dt><dd>$1,000.00</dd><dt>Margin posted</dt><dd>$100.00</dd><dt>Loss at stop</dt><dd class="down">−$10.00</dd><dt>Loss at stop, with fees</dt><dd class="down">−$12.00</dd><dt>Equity drawdown</dt><dd>1.2%</dd></dl><p class="muted small">Your risk is set by notional size and the stop, not by the margin.</p></section></div>
+<section class="card stack" style="margin-top:16px"><div class="spread"><h3>Currency converter</h3><span class="tag real">REAL DATA</span></div>
+<div class="grid g3"><div class="field"><label>Amount</label><div class="in">1,000</div></div><div class="field"><label>From</label><div class="in">USD</div></div><div class="field"><label>To</label><div class="in">EUR</div></div></div>
+<p class="num">1,000.00 USD = 910.00 EUR</p><p class="muted small">ECB reference rate for 2026-11-17 via Frankfurter. Daily rates, not live quotes.</p></section></div></main></div></div></body></html>
