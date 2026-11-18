@@ -3,6 +3,8 @@ const assert = require('node:assert/strict');
 
 process.env.ALPHA_VANTAGE_API_KEY = 'test-alpha-key';
 process.env.COINGECKO_DEMO_API_KEY = 'test-gecko-key';
+process.env.TIINGO_API_KEY = 'test-tiingo-key';
+process.env.FINNHUB_API_KEY = 'test-finnhub-key';
 process.env.MARKET_CACHE_DIR = require('node:fs').mkdtempSync(require('node:path').join(require('node:os').tmpdir(), 'market-cache-test-'));
 const { handleMarket } = require('../server.js');
 
@@ -65,4 +67,30 @@ test('fresh cache hit skips fetch; provider failure serves stale cache', async (
 test('provider errors never return fake API keys', async () => {
   const result = await call('/api/market/crypto/gecko?id=bitcoin&vs=usd&days=1', null, { fetch: async () => { throw Error('test-gecko-key'); } });
   assert.equal(result.status, 502); assert.doesNotMatch(JSON.stringify(result.data), /test-gecko-key/);
+});
+
+test('maps Tiingo daily prices and sends the key in a header, not the URL', async () => {
+  let seen;
+  const fetch = async (u, init) => { seen = { u, init }; return { ok: true, json: async () => [{ date: '2026-11-17T00:00:00.000Z', open: 1, high: 3, low: 1, close: 2, volume: 9 }] }; };
+  const result = await call('/api/market/tiingo?symbol=SPY', null, { fetch });
+  assert.equal(result.status, 200); assert.equal(result.data.provider, 'Tiingo'); assert.equal(result.data.bars[0].c, 2);
+  assert.ok(!seen.u.includes('test-tiingo-key')); assert.equal(seen.init.headers.Authorization, 'Token test-tiingo-key');
+});
+
+test('Finnhub quote maps fields and treats an all-zero answer as no data', async () => {
+  const ok = await call('/api/market/finnhub?symbol=SPY', { c: 10, o: 9, h: 11, l: 8, pc: 9.5, t: 1794960000 });
+  assert.equal(ok.status, 200); assert.equal(ok.data.quote.prevClose, 9.5);
+  assert.equal((await call('/api/market/finnhub?symbol=ZZZZ', { c: 0, pc: 0, t: 0 })).status, 502);
+});
+
+test('verify cross-checks closes on matching dates and flags disagreement', async () => {
+  const fetch = async u => ({ ok: true, json: async () =>
+    u.includes('alphavantage') ? { 'Time Series (Daily)': { '2026-11-16': { '1. open': 1, '2. high': 1, '3. low': 1, '4. close': '100.00' }, '2026-11-17': { '1. open': 1, '2. high': 1, '3. low': 1, '4. close': '101.00' } } }
+    : u.includes('tiingo') ? [{ date: '2026-11-16T00:00:00.000Z', open: 1, high: 1, low: 1, close: 100.1 }, { date: '2026-11-17T00:00:00.000Z', open: 1, high: 1, low: 1, close: 103 }]
+    : { c: 102, o: 1, h: 1, l: 1, pc: 101, t: Date.UTC(2026, 10, 18) / 1000 } });
+  const r = await call('/api/market/verify?symbol=QQQ', null, { fetch });
+  assert.equal(r.status, 200); assert.equal(r.data.checkedDays, 2); assert.equal(r.data.disagreements, 1); assert.equal(r.data.verdict, 'disagree');
+  const last = r.data.rows.at(-1); assert.equal(last.values.Finnhub, 101); assert.equal(last.agree, false);
+  assert.equal(r.data.rows[0].agree, true);
+  assert.equal((await call('/api/market/verify?symbol=bad')).status, 400);
 });

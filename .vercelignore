@@ -1,0 +1,13 @@
+# Not part of the deployed site
+app/server.js
+app/tests
+app/.cache
+app/backtest/*.test.cjs
+.env
+.env.*
+!.env.example
+materials/external_repos
+.agents
+.gemini
+.claude
+agent

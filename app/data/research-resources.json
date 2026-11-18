@@ -1,14 +1,580 @@
 [
-  {"id":"trend-century","title":"A Century of Evidence on Trend-Following Investing","creator":"Brian Hurst, Yao Hua Ooi, Lasse H. Pedersen · AQR","url":"https://www.aqr.com/insights/research/journal-article/a-century-of-evidence-on-trend-following-investing","type":"Research paper","topics":["trend following","momentum","strategy evidence"],"free":"Free article / PDF","published":"2017","prerequisites":"Basic returns and long/short concepts","why":"Historical evidence and design context for diversified trend-following systems.","limitations":"Historical sample and managed-futures focus; not a forecast or a recipe for U.S. stock returns. AQR is an investment manager with commercial interests.","incentive":"Investment manager / product marketing","verification":{"checked":"2026-11-05","method":"Publisher page metadata and abstract retrieved","transcript":"Not applicable","review":"Abstract/page reviewed; full audiovisual content not applicable"},"timestamps":null,"claim":"The authors study long-run historical trend-following evidence; this does not establish future performance."},
-  {"id":"ts-momentum","title":"Time Series Momentum","creator":"Tobias J. Moskowitz, Yao Hua Ooi, Lasse Heje Pedersen · Journal of Financial Economics","url":"https://www.sciencedirect.com/science/article/pii/S0304405X11002613","type":"Peer-reviewed research paper","topics":["momentum","trend following","futures"],"free":"Abstract free; full text availability may vary","published":"2012","prerequisites":"Returns, futures and time-series basics","why":"Defines and tests a time-series momentum effect across liquid futures markets.","limitations":"Historical multi-asset futures evidence does not directly validate an equity day-trading setup or current edge.","incentive":"Academic research; authors' affiliations disclosed on page","verification":{"checked":"2026-11-05","method":"Journal abstract/metadata retrieved","transcript":"Not applicable","review":"Abstract reviewed; full paper not independently re-analyzed"},"timestamps":null,"claim":"Research documents historical return persistence over several horizons in the studied futures sample."},
-  {"id":"pairs-nber","title":"Pairs Trading: Performance of a Relative Value Arbitrage Rule","creator":"Evan Gatev, William N. Goetzmann, K. Geert Rouwenhorst · NBER Working Paper 7032","url":"https://www.nber.org/papers/w7032","type":"Research working paper","topics":["pairs trading","mean reversion","relative value"],"free":"Free paper","published":"1999","prerequisites":"Pair construction, returns and transaction costs","why":"A classic study describing a minimum-distance pairs method and its historical evaluation.","limitations":"Historical U.S. stock sample (1962–1997); the authors discuss microstructure-related explanations. Working paper results are not current evidence.","incentive":"Academic working paper","verification":{"checked":"2026-11-05","method":"NBER abstract and PDF landing page retrieved","transcript":"Not applicable","review":"Abstract/metadata reviewed; full paper not re-analyzed"},"timestamps":null,"claim":"The paper reports historical results for its particular pair-selection and trading method, with important caveats."},
-  {"id":"rsi2-stockcharts","title":"RSI(2)","creator":"StockCharts ChartSchool","url":"https://chartschool.stockcharts.com/table-of-contents/trading-strategies-and-models/trading-strategies/rsi-2","type":"Strategy education article","topics":["mean reversion","RSI","strategy rules"],"free":"Free article","published":"Date not shown in retrieved metadata","prerequisites":"RSI and moving-average basics","why":"Explains a specific short-lookback mean-reversion framework and its rules.","limitations":"Educational strategy example; outcomes depend on instruments, periods, execution and costs. Verify every rule and do not copy historical claims as a current edge.","incentive":"Charting/market-data publisher; commercial site","verification":{"checked":"2026-11-05","method":"Article title and description retrieved","transcript":"Not applicable","review":"Article metadata reviewed; performance not independently verified"},"timestamps":null,"claim":"The article describes an RSI(2) mean-reversion method attributed to Larry Connors."},
-  {"id":"donchian-tradingview","title":"Donchian Channels (DC)","creator":"TradingView Support","url":"https://www.tradingview.com/support/solutions/43000502253-donchian-channels-dc/","type":"Platform documentation","topics":["breakout","trend following","channel"],"free":"Free help page","published":"Date not shown in retrieved metadata","prerequisites":"High/low bars and lookback windows","why":"Defines the channel calculation used in many breakout examples.","limitations":"Indicator documentation is not a complete Turtle system, executable strategy or evidence of profitability.","incentive":"Charting platform promotion","verification":{"checked":"2026-11-05","method":"Official support page retrieved","transcript":"Not applicable","review":"Text description reviewed; no backtest claim independently verified"},"timestamps":null,"claim":"Explains Donchian channel upper/lower lookback highs and lows."},
-  {"id":"backtesting-harvey-liu","title":"Backtesting","creator":"Campbell R. Harvey and Yan Liu · CME-hosted research paper","url":"https://www.cmegroup.com/education/files/backtesting.pdf","type":"Research paper","topics":["backtesting","multiple testing","overfitting"],"free":"Free PDF","published":"Current version July 28, 2015","prerequisites":"Sharpe ratio, out-of-sample testing and hypothesis testing","why":"Discusses multiple testing, data mining and adjusting interpretation of backtest results.","limitations":"Methodological paper, not a trading strategy or recommendation. CME hosts it and has an exchange/data business interest.","incentive":"Exchange / market-data provider host","verification":{"checked":"2026-11-05","method":"PDF title page and abstract retrieved","transcript":"Not applicable","review":"Abstract and title page reviewed; not independently reproduced"},"timestamps":null,"claim":"The authors argue that multiple tests and data mining affect how historical performance should be interpreted."},
-  {"id":"pbo-bailey","title":"The Probability of Backtest Overfitting","creator":"David H. Bailey, Jonathan M. Borwein, Marcos López de Prado, Qiji Jim Zhu","url":"https://escholarship.org/uc/item/4w1110bb","type":"Research paper","topics":["backtesting","overfitting","validation"],"free":"Free repository record and paper","published":"2016 paper record","prerequisites":"In-sample/out-of-sample testing and multiple strategy selection","why":"Introduces a framework for assessing the chance that selected backtests overfit their sample.","limitations":"Statistical framework requires careful design; simple chronological holdouts do not automatically solve all backtest problems.","incentive":"Academic research","verification":{"checked":"2026-11-05","method":"University repository abstract retrieved","transcript":"Not applicable","review":"Abstract reviewed; method not reimplemented in this site"},"timestamps":null,"claim":"The paper studies the probability that a selected backtest is overfit."},
-  {"id":"cme-intro-futures","title":"Introduction to Futures","creator":"CME Group","url":"https://www.cmegroup.com/education/courses/introduction-to-futures","type":"Free course","topics":["futures","contracts","margin","settlement"],"free":"Free course","published":"Course page current as checked","prerequisites":"None; beginner course","why":"Explains futures contracts, exchange role, participants and how a futures trade works.","limitations":"Futures exchange education; product examples may encourage familiarity with futures. It does not provide personalized advice.","incentive":"Exchange / product education","verification":{"checked":"2026-11-05","method":"Official course page and syllabus retrieved","transcript":"Not applicable","review":"Syllabus reviewed; individual videos not fully watched"},"timestamps":null,"claim":"CME's course page describes lessons on futures mechanics and market participants."},
-  {"id":"ibkr-paper-video","title":"How to Open an IBKR Paper Trading Account","creator":"Interactive Brokers (verified YouTube channel)","url":"https://www.youtube.com/watch?v=8nDMgHSElfI","type":"YouTube video","topics":["paper trading","platform mechanics"],"free":"Video free; requires IBKR account for product","published":"2025-08-27","prerequisites":"Platform setup only; no strategy prerequisite","why":"Shows the publisher's paper-account access workflow; useful for understanding what broker simulations are.","limitations":"Promotional account setup content. Broker paper executions and data may differ from live markets. This site does not connect to IBKR.","incentive":"Broker account and platform promotion","verification":{"checked":"2026-11-05","method":"YouTube title, channel verification and description metadata retrieved","transcript":"Transcript not reviewed","review":"Metadata/description only; audiovisual content not watched"},"timestamps":null,"claim":"Publisher describes a walkthrough for opening/accessing an IBKR paper-trading account."},
-  {"id":"sec-day-trading","title":"Day Trading","creator":"U.S. Securities and Exchange Commission · Investor.gov","url":"https://www.investor.gov/introduction-investing/investing-basics/glossary/day-trading","type":"Regulator education","topics":["risk","day trading","losses"],"free":"Free","published":"Page current as checked","prerequisites":"None","why":"A concise regulator explanation of day trading and risk of substantial losses.","limitations":"General education, not individualized advice or a prediction of any particular strategy.","incentive":"Government investor education","verification":{"checked":"2026-11-05","method":"Investor.gov page retrieved","transcript":"Not applicable","review":"Page text reviewed"},"timestamps":null,"claim":"SEC investor education warns that day trading is extremely risky and losses can occur quickly."},
-  {"id":"sec-order-types","title":"Understanding Order Types – Investor Bulletin","creator":"U.S. Securities and Exchange Commission · Investor.gov","url":"https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-14","type":"Regulator education","topics":["orders","execution","market/limit/stop"],"free":"Free","published":"2017; updated 2026-08-18","prerequisites":"Basic stock order terminology","why":"Explains how market, limit, stop and stop-limit orders work and their execution limitations.","limitations":"Broker and venue policies differ; the page is not an execution guarantee.","incentive":"Government investor education","verification":{"checked":"2026-11-05","method":"Investor.gov page retrieved; updated date visible","transcript":"Not applicable","review":"Page text reviewed"},"timestamps":null,"claim":"SEC explains that market and stop orders may execute at prices different from the last price or stop trigger, and limit orders may not fill."},
-  {"id":"sec-social-risk","title":"Investor Alert: Risks of Short-Term Trading Based on Social Media","creator":"U.S. Securities and Exchange Commission · Investor.gov","url":"https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-alerts/investor-alert-thinking-about-investing-latest-hot-stock-understand-significant-risks-short-term","type":"Regulator investor alert","topics":["social media","research inbox","risk"],"free":"Free","published":"2021","prerequisites":"None","why":"Pairs well with the research inbox by separating social popularity from verifiable evidence.","limitations":"General investor alert; not a fact-check of any particular creator or current post.","incentive":"Government investor education","verification":{"checked":"2026-11-05","method":"Investor.gov alert retrieved","transcript":"Not applicable","review":"Page summary reviewed"},"timestamps":null,"claim":"SEC warns about short-term trading decisions driven by social-media promotion, especially in volatile markets."}
+  {
+    "id": "trend-century",
+    "title": "A Century of Evidence on Trend-Following Investing",
+    "creator": "Brian Hurst, Yao Hua Ooi, Lasse H. Pedersen · AQR",
+    "url": "https://www.aqr.com/insights/research/journal-article/a-century-of-evidence-on-trend-following-investing",
+    "type": "Research paper",
+    "topics": [
+      "trend following",
+      "momentum",
+      "strategy evidence"
+    ],
+    "free": "Free article / PDF",
+    "published": "2017",
+    "prerequisites": "Basic returns and long/short concepts",
+    "why": "Historical evidence and design context for diversified trend-following systems.",
+    "limitations": "Historical sample and managed-futures focus; not a forecast or a recipe for U.S. stock returns. AQR is an investment manager with commercial interests.",
+    "incentive": "Investment manager / product marketing",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "Publisher page metadata and abstract retrieved",
+      "transcript": "Not applicable",
+      "review": "Abstract/page reviewed; full audiovisual content not applicable"
+    },
+    "timestamps": null,
+    "claim": "The authors study long-run historical trend-following evidence; this does not establish future performance."
+  },
+  {
+    "id": "ts-momentum",
+    "title": "Time Series Momentum",
+    "creator": "Tobias J. Moskowitz, Yao Hua Ooi, Lasse Heje Pedersen · Journal of Financial Economics",
+    "url": "https://www.sciencedirect.com/science/article/pii/S0304405X11002613",
+    "type": "Peer-reviewed research paper",
+    "topics": [
+      "momentum",
+      "trend following",
+      "futures"
+    ],
+    "free": "Abstract free; full text availability may vary",
+    "published": "2012",
+    "prerequisites": "Returns, futures and time-series basics",
+    "why": "Defines and tests a time-series momentum effect across liquid futures markets.",
+    "limitations": "Historical multi-asset futures evidence does not directly validate an equity day-trading setup or current edge.",
+    "incentive": "Academic research; authors' affiliations disclosed on page",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "Journal abstract/metadata retrieved",
+      "transcript": "Not applicable",
+      "review": "Abstract reviewed; full paper not independently re-analyzed"
+    },
+    "timestamps": null,
+    "claim": "Research documents historical return persistence over several horizons in the studied futures sample."
+  },
+  {
+    "id": "pairs-nber",
+    "title": "Pairs Trading: Performance of a Relative Value Arbitrage Rule",
+    "creator": "Evan Gatev, William N. Goetzmann, K. Geert Rouwenhorst · NBER Working Paper 7032",
+    "url": "https://www.nber.org/papers/w7032",
+    "type": "Research working paper",
+    "topics": [
+      "pairs trading",
+      "mean reversion",
+      "relative value"
+    ],
+    "free": "Free paper",
+    "published": "1999",
+    "prerequisites": "Pair construction, returns and transaction costs",
+    "why": "A classic study describing a minimum-distance pairs method and its historical evaluation.",
+    "limitations": "Historical U.S. stock sample (1962–1997); the authors discuss microstructure-related explanations. Working paper results are not current evidence.",
+    "incentive": "Academic working paper",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "NBER abstract and PDF landing page retrieved",
+      "transcript": "Not applicable",
+      "review": "Abstract/metadata reviewed; full paper not re-analyzed"
+    },
+    "timestamps": null,
+    "claim": "The paper reports historical results for its particular pair-selection and trading method, with important caveats."
+  },
+  {
+    "id": "rsi2-stockcharts",
+    "title": "RSI(2)",
+    "creator": "StockCharts ChartSchool",
+    "url": "https://chartschool.stockcharts.com/table-of-contents/trading-strategies-and-models/trading-strategies/rsi-2",
+    "type": "Strategy education article",
+    "topics": [
+      "mean reversion",
+      "RSI",
+      "strategy rules"
+    ],
+    "free": "Free article",
+    "published": "Date not shown in retrieved metadata",
+    "prerequisites": "RSI and moving-average basics",
+    "why": "Explains a specific short-lookback mean-reversion framework and its rules.",
+    "limitations": "Educational strategy example; outcomes depend on instruments, periods, execution and costs. Verify every rule and do not copy historical claims as a current edge.",
+    "incentive": "Charting/market-data publisher; commercial site",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "Article title and description retrieved",
+      "transcript": "Not applicable",
+      "review": "Article metadata reviewed; performance not independently verified"
+    },
+    "timestamps": null,
+    "claim": "The article describes an RSI(2) mean-reversion method attributed to Larry Connors."
+  },
+  {
+    "id": "donchian-tradingview",
+    "title": "Donchian Channels (DC)",
+    "creator": "TradingView Support",
+    "url": "https://www.tradingview.com/support/solutions/43000502253-donchian-channels-dc/",
+    "type": "Platform documentation",
+    "topics": [
+      "breakout",
+      "trend following",
+      "channel"
+    ],
+    "free": "Free help page",
+    "published": "Date not shown in retrieved metadata",
+    "prerequisites": "High/low bars and lookback windows",
+    "why": "Defines the channel calculation used in many breakout examples.",
+    "limitations": "Indicator documentation is not a complete Turtle system, executable strategy or evidence of profitability.",
+    "incentive": "Charting platform promotion",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "Official support page retrieved",
+      "transcript": "Not applicable",
+      "review": "Text description reviewed; no backtest claim independently verified"
+    },
+    "timestamps": null,
+    "claim": "Explains Donchian channel upper/lower lookback highs and lows."
+  },
+  {
+    "id": "backtesting-harvey-liu",
+    "title": "Backtesting",
+    "creator": "Campbell R. Harvey and Yan Liu · CME-hosted research paper",
+    "url": "https://www.cmegroup.com/education/files/backtesting.pdf",
+    "type": "Research paper",
+    "topics": [
+      "backtesting",
+      "multiple testing",
+      "overfitting"
+    ],
+    "free": "Free PDF",
+    "published": "Current version July 28, 2015",
+    "prerequisites": "Sharpe ratio, out-of-sample testing and hypothesis testing",
+    "why": "Discusses multiple testing, data mining and adjusting interpretation of backtest results.",
+    "limitations": "Methodological paper, not a trading strategy or recommendation. CME hosts it and has an exchange/data business interest.",
+    "incentive": "Exchange / market-data provider host",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "PDF title page and abstract retrieved",
+      "transcript": "Not applicable",
+      "review": "Abstract and title page reviewed; not independently reproduced"
+    },
+    "timestamps": null,
+    "claim": "The authors argue that multiple tests and data mining affect how historical performance should be interpreted."
+  },
+  {
+    "id": "pbo-bailey",
+    "title": "The Probability of Backtest Overfitting",
+    "creator": "David H. Bailey, Jonathan M. Borwein, Marcos López de Prado, Qiji Jim Zhu",
+    "url": "https://escholarship.org/uc/item/4w1110bb",
+    "type": "Research paper",
+    "topics": [
+      "backtesting",
+      "overfitting",
+      "validation"
+    ],
+    "free": "Free repository record and paper",
+    "published": "2016 paper record",
+    "prerequisites": "In-sample/out-of-sample testing and multiple strategy selection",
+    "why": "Introduces a framework for assessing the chance that selected backtests overfit their sample.",
+    "limitations": "Statistical framework requires careful design; simple chronological holdouts do not automatically solve all backtest problems.",
+    "incentive": "Academic research",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "University repository abstract retrieved",
+      "transcript": "Not applicable",
+      "review": "Abstract reviewed; method not reimplemented in this site"
+    },
+    "timestamps": null,
+    "claim": "The paper studies the probability that a selected backtest is overfit."
+  },
+  {
+    "id": "cme-intro-futures",
+    "title": "Introduction to Futures",
+    "creator": "CME Group",
+    "url": "https://www.cmegroup.com/education/courses/introduction-to-futures",
+    "type": "Free course",
+    "topics": [
+      "futures",
+      "contracts",
+      "margin",
+      "settlement"
+    ],
+    "free": "Free course",
+    "published": "Course page current as checked",
+    "prerequisites": "None; beginner course",
+    "why": "Explains futures contracts, exchange role, participants and how a futures trade works.",
+    "limitations": "Futures exchange education; product examples may encourage familiarity with futures. It does not provide personalized advice.",
+    "incentive": "Exchange / product education",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "Official course page and syllabus retrieved",
+      "transcript": "Not applicable",
+      "review": "Syllabus reviewed; individual videos not fully watched"
+    },
+    "timestamps": null,
+    "claim": "CME's course page describes lessons on futures mechanics and market participants."
+  },
+  {
+    "id": "ibkr-paper-video",
+    "title": "How to Open an IBKR Paper Trading Account",
+    "creator": "Interactive Brokers (verified YouTube channel)",
+    "url": "https://www.youtube.com/watch?v=8nDMgHSElfI",
+    "type": "YouTube video",
+    "topics": [
+      "paper trading",
+      "platform mechanics"
+    ],
+    "free": "Video free; requires IBKR account for product",
+    "published": "2025-08-27",
+    "prerequisites": "Platform setup only; no strategy prerequisite",
+    "why": "Shows the publisher's paper-account access workflow; useful for understanding what broker simulations are.",
+    "limitations": "Promotional account setup content. Broker paper executions and data may differ from live markets. This site does not connect to IBKR.",
+    "incentive": "Broker account and platform promotion",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "YouTube title, channel verification and description metadata retrieved",
+      "transcript": "Transcript not reviewed",
+      "review": "Metadata/description only; audiovisual content not watched"
+    },
+    "timestamps": null,
+    "claim": "Publisher describes a walkthrough for opening/accessing an IBKR paper-trading account."
+  },
+  {
+    "id": "sec-day-trading",
+    "title": "Day Trading",
+    "creator": "U.S. Securities and Exchange Commission · Investor.gov",
+    "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/day-trading",
+    "type": "Regulator education",
+    "topics": [
+      "risk",
+      "day trading",
+      "losses"
+    ],
+    "free": "Free",
+    "published": "Page current as checked",
+    "prerequisites": "None",
+    "why": "A concise regulator explanation of day trading and risk of substantial losses.",
+    "limitations": "General education, not individualized advice or a prediction of any particular strategy.",
+    "incentive": "Government investor education",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "Investor.gov page retrieved",
+      "transcript": "Not applicable",
+      "review": "Page text reviewed"
+    },
+    "timestamps": null,
+    "claim": "SEC investor education warns that day trading is extremely risky and losses can occur quickly."
+  },
+  {
+    "id": "sec-order-types",
+    "title": "Understanding Order Types – Investor Bulletin",
+    "creator": "U.S. Securities and Exchange Commission · Investor.gov",
+    "url": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-14",
+    "type": "Regulator education",
+    "topics": [
+      "orders",
+      "execution",
+      "market/limit/stop"
+    ],
+    "free": "Free",
+    "published": "2017; updated 2026-08-18",
+    "prerequisites": "Basic stock order terminology",
+    "why": "Explains how market, limit, stop and stop-limit orders work and their execution limitations.",
+    "limitations": "Broker and venue policies differ; the page is not an execution guarantee.",
+    "incentive": "Government investor education",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "Investor.gov page retrieved; updated date visible",
+      "transcript": "Not applicable",
+      "review": "Page text reviewed"
+    },
+    "timestamps": null,
+    "claim": "SEC explains that market and stop orders may execute at prices different from the last price or stop trigger, and limit orders may not fill."
+  },
+  {
+    "id": "sec-social-risk",
+    "title": "Investor Alert: Risks of Short-Term Trading Based on Social Media",
+    "creator": "U.S. Securities and Exchange Commission · Investor.gov",
+    "url": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-alerts/investor-alert-thinking-about-investing-latest-hot-stock-understand-significant-risks-short-term",
+    "type": "Regulator investor alert",
+    "topics": [
+      "social media",
+      "research inbox",
+      "risk"
+    ],
+    "free": "Free",
+    "published": "2021",
+    "prerequisites": "None",
+    "why": "Pairs well with the research inbox by separating social popularity from verifiable evidence.",
+    "limitations": "General investor alert; not a fact-check of any particular creator or current post.",
+    "incentive": "Government investor education",
+    "verification": {
+      "checked": "2026-11-05",
+      "method": "Investor.gov alert retrieved",
+      "transcript": "Not applicable",
+      "review": "Page summary reviewed"
+    },
+    "timestamps": null,
+    "claim": "SEC warns about short-term trading decisions driven by social-media promotion, especially in volatile markets."
+  },
+  {
+    "id": "turtle-rules",
+    "title": "The Original Turtle Trading Rules",
+    "creator": "Curtis Faith (published by TurtleTrader)",
+    "url": "https://www.turtletrader.com/rules/",
+    "type": "Rule specification",
+    "topics": [
+      "breakout",
+      "trend following",
+      "Donchian channel",
+      "backtesting lab"
+    ],
+    "free": "Free web page",
+    "published": "2003",
+    "prerequisites": "Highs, lows and moving windows",
+    "why": "Source of the 20-day breakout and 10-day exit behind the lab's Donchian 20/10 rule.",
+    "limitations": "Original rules use intraday stops and futures position sizing; the lab uses close-confirmed daily signals, long or flat.",
+    "incentive": "Site sells trading education",
+    "claim": "Describes a historical futures breakout system; this does not establish a current edge.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "stockcharts-rsi2",
+    "title": "RSI(2) strategy",
+    "creator": "StockCharts ChartSchool",
+    "url": "https://chartschool.stockcharts.com/table-of-contents/trading-strategies-and-models/trading-strategies/rsi-2",
+    "type": "Rule specification",
+    "topics": [
+      "mean reversion",
+      "RSI",
+      "trend filter",
+      "backtesting lab"
+    ],
+    "free": "Free web page",
+    "published": "Undated",
+    "prerequisites": "RSI and simple moving averages",
+    "why": "Plain statement of the Connors RSI(2) pullback rule used in the lab.",
+    "limitations": "RSI smoothing and fill timing vary between write-ups; the lab states its own.",
+    "incentive": "Charting platform education",
+    "claim": "Describes the rule; performance figures elsewhere are not repeated here.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "faber-taa",
+    "title": "A Quantitative Approach to Tactical Asset Allocation",
+    "creator": "Mebane Faber",
+    "url": "https://www.onlineinvestingai.com/blog/wp-content/uploads/2011/04/A-Quantitative-Approach-to-Tactical-Asset-Allocation.pdf",
+    "type": "Research paper",
+    "topics": [
+      "trend following",
+      "200-day moving average",
+      "asset allocation",
+      "backtesting lab"
+    ],
+    "free": "Free PDF (third-party mirror)",
+    "published": "2007, updated 2013",
+    "prerequisites": "Moving averages and drawdown",
+    "why": "Basis for the lab's 200-day trend filter, adapted to one asset, long or flat.",
+    "limitations": "The paper uses monthly signals on asset classes; the lab uses daily closes on one symbol. The PDF is hosted by a third party.",
+    "incentive": "Author runs an investment firm",
+    "claim": "Reports a historical study; not a forecast.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "bollinger-rules",
+    "title": "Bollinger Band Rules",
+    "creator": "John Bollinger",
+    "url": "https://www.bollingerbands.com/bollinger-band-rules",
+    "type": "Rule specification",
+    "topics": [
+      "volatility bands",
+      "mean reversion",
+      "backtesting lab"
+    ],
+    "free": "Free web page",
+    "published": "Undated",
+    "prerequisites": "Moving average and standard deviation",
+    "why": "Primary source for the bands behind the lab's Bollinger re-entry rule.",
+    "limitations": "The re-entry rule is a lab convention built on the bands, not one of Bollinger's stated rules. The lab uses population standard deviation.",
+    "incentive": "Author sells Bollinger Band products and education",
+    "claim": "Explains how the bands are built and read; not a trading recommendation.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "yahoo-6-day-trading",
+    "title": "6 Day Trading Strategies, And How To Use Them",
+    "creator": "Ross Cameron · Warrior Trading (Yahoo Finance)",
+    "url": "https://finance.yahoo.com/news/6-day-trading-strategies-them-184013259.html",
+    "type": "Article",
+    "topics": [
+      "day trading",
+      "momentum",
+      "breakout",
+      "claims to critique"
+    ],
+    "free": "Free article",
+    "published": "2017",
+    "prerequisites": "Order types and spreads",
+    "why": "Names six common intraday setups: Gap and Go, momentum, bull flags, breakouts, pullbacks and reversals.",
+    "limitations": "Needs intraday data the lab does not have. First-person success claims have no sample, dates or costs.",
+    "incentive": "Author sells day-trading courses",
+    "claim": "Describes setups and the author's experience; not evidence of expected results.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "yahoo-guide-strategies",
+    "title": "A Guide to Stock Trading Strategies",
+    "creator": "Eric Reed · SmartAsset (Yahoo Finance)",
+    "url": "https://finance.yahoo.com/news/guide-stock-trading-strategies-153119835.html",
+    "type": "Article",
+    "topics": [
+      "strategy overview",
+      "pair trading",
+      "arbitrage",
+      "claims to critique"
+    ],
+    "free": "Free article",
+    "published": "2020",
+    "prerequisites": "None",
+    "why": "A broad map of active styles: pair trading, day trading, news, fundamental, technical, arbitrage.",
+    "limitations": "The arbitrage example ignores fees, settlement and execution risk. The 10–40% speculation range has no source.",
+    "incentive": "Publisher earns from financial-advisor referrals",
+    "claim": "Editorial overview, not a prescription.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "yahoo-12-tips",
+    "title": "12 Best Day Trading Tips for Beginners",
+    "creator": "Mashaid Ahmed · Insider Monkey (Yahoo Finance)",
+    "url": "https://finance.yahoo.com/news/12-best-day-trading-tips-135448213.html",
+    "type": "Article",
+    "topics": [
+      "day trading",
+      "risk management",
+      "stop loss",
+      "claims to critique"
+    ],
+    "free": "Free article",
+    "published": "2024",
+    "prerequisites": "Stops and position sizing",
+    "why": "Beginner habits: start small, plan risk and reward, use stops, pick a niche.",
+    "limitations": "Only part of the list was readable. Quotes and earnings claims are unsourced. Stops do not guarantee their price.",
+    "incentive": "Ad-supported publisher",
+    "claim": "Opinion and tips; not evidence that the tips produce profits.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "robinhood-strategies",
+    "title": "Robinhood Strategies: FAQ and investment approach",
+    "creator": "Robinhood Asset Management",
+    "url": "https://robinhood.com/us/en/support/articles/strategies-faq/",
+    "type": "Product documentation",
+    "topics": [
+      "product passport",
+      "managed portfolio",
+      "fees"
+    ],
+    "free": "Free web page",
+    "published": "Current product page",
+    "prerequisites": "Lesson 2 product passport",
+    "why": "A real managed-portfolio product to practice reading: who decides trades, 0.25% yearly fee, $50 minimum, $500 threshold for single stocks.",
+    "limitations": "Terms and fees can change; check the live page. Not a self-directed strategy.",
+    "incentive": "Provider describing its own product",
+    "claim": "Describes the service; nothing here is a recommendation to use it.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "robinhood-charts",
+    "title": "Robinhood Strategies charts and investing tools",
+    "creator": "Robinhood",
+    "url": "https://robinhood.com/us/en/support/articles/strategies-charts/",
+    "type": "Product documentation",
+    "topics": [
+      "performance reporting",
+      "returns",
+      "product passport"
+    ],
+    "free": "Free web page",
+    "published": "Current product page",
+    "prerequisites": "Simple vs compounded return",
+    "why": "Shows how a broker reports returns: simple return net of the management fee, ignoring compounding and deposits.",
+    "limitations": "Product documentation, not an independent audit.",
+    "incentive": "Provider describing its own product",
+    "claim": "Explains what the charts show.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  },
+  {
+    "id": "tradingview-scripts",
+    "title": "TradingView public scripts and script types",
+    "creator": "TradingView",
+    "url": "https://www.tradingview.com/support/solutions/43000482573-what-are-the-different-types-of-published-scripts/",
+    "type": "Platform documentation",
+    "topics": [
+      "indicators",
+      "licensing",
+      "strategy sources"
+    ],
+    "free": "Free web page",
+    "published": "Current help page",
+    "prerequisites": "None",
+    "why": "Explains open, protected and invite-only scripts and why each script's license must be checked before reuse.",
+    "limitations": "Script listings could not be read automatically, so no popularity ranking is given. Per-script licenses are unverified.",
+    "incentive": "Charting platform",
+    "claim": "Platform rules for published scripts.",
+    "verification": {
+      "checked": "2026-11-17",
+      "method": "Page text retrieved by a research agent",
+      "transcript": "Not applicable",
+      "review": "Summary written from the retrieved text; not an endorsement"
+    },
+    "timestamps": null
+  }
 ]

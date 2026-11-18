@@ -1,0 +1,118 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trading Research Academy</title>
+<style>@font-face{font-family:Inter;src:url(vendor/fonts/inter-latin-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap}@font-face{font-family:'JetBrains Mono';src:url(vendor/fonts/jetbrains-mono-latin-500-normal.woff2) format('woff2');font-weight:500;font-display:swap}</style>
+<style>
+:root{--bg:#f7f6f3;--panel:#fff;--line:#e4e1da;--ink:#1c1a17;--ink2:#4a4640;--muted:#77716a;--accent:#0d6e6e;--soft:#e3f0ef;--amber:#7a4b00;--amberbg:#fdf3e1}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:16px/1.6 Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;z-index:10;background:rgba(247,246,243,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:24px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.mark{width:28px;height:28px;border-radius:7px;background:var(--accent);color:#fff;display:grid;place-items:center;font:500 12px 'JetBrains Mono'}
+nav .links{margin-left:auto;display:flex;gap:24px;font-size:14px;color:var(--ink2)}
+.btn{display:inline-block;padding:11px 18px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid var(--line);background:var(--panel);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.hero{padding:88px 0 40px;text-align:center}
+.pill{display:inline-block;font-size:13px;font-weight:500;color:var(--accent);background:var(--soft);padding:5px 12px;border-radius:999px}
+h1{font-size:clamp(36px,5.4vw,60px);line-height:1.08;letter-spacing:-.03em;font-weight:700;margin:18px auto 0;max-width:15ch}
+.lede{font-size:19px;color:var(--ink2);max-width:58ch;margin:18px auto 0}
+.cta{display:flex;gap:12px;justify-content:center;margin-top:28px}
+.shot{margin:56px auto 0;border-radius:16px;border:1px solid var(--line);background:var(--panel);padding:10px;box-shadow:0 30px 60px -30px rgba(28,26,23,.25);max-width:1040px}
+.shot img{width:100%;display:block;border-radius:10px}
+section{padding:96px 0}
+.kicker{font-size:14px;font-weight:600;color:var(--accent)}
+h2{font-size:clamp(28px,3.4vw,40px);line-height:1.15;letter-spacing:-.02em;margin-top:8px;max-width:22ch}
+.sub{color:var(--ink2);max-width:60ch;margin-top:12px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;transition:transform .25s,box-shadow .25s,border-color .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -18px rgba(28,26,23,.3);border-color:#cfcac0}
+.card .n{font:500 13px 'JetBrains Mono';color:var(--muted)}
+.card h3{font-size:18px;margin:10px 0 6px}
+.card p{color:var(--ink2);font-size:15px}
+.feature{display:grid;grid-template-columns:1fr 1.25fr;gap:56px;align-items:center}
+.feature.flip{grid-template-columns:1.25fr 1fr}.feature.flip .text{order:2}
+.feature ul{list-style:none;margin-top:20px}
+.feature li{padding:10px 0;border-top:1px solid var(--line);color:var(--ink2);font-size:15px}
+.feature li b{color:var(--ink);font-weight:600}
+.frame{border-radius:14px;border:1px solid var(--line);background:var(--panel);padding:8px;box-shadow:0 24px 48px -28px rgba(28,26,23,.3);overflow:hidden}
+.frame img{width:100%;display:block;border-radius:8px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.stat b{display:block;font:500 34px 'JetBrains Mono';letter-spacing:-.02em}
+.stat span{color:var(--muted);font-size:14px}
+.honest{background:var(--amberbg);border:1px solid #e9c98f;color:var(--amber);border-radius:14px;padding:22px 24px;margin-top:40px;font-size:15px}
+.final{text-align:center;background:var(--ink);color:#f3f1ec;border-radius:20px;padding:64px 24px}
+.final h2{margin:0 auto;color:#fff}.final p{color:#bdb7ad;margin:12px auto 0;max-width:52ch}
+footer{padding:40px 0 60px;color:var(--muted);font-size:14px;text-align:center}
+/* Scroll animations: gentle rise and fade, staggered inside groups. */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.zoom{transform:translateY(32px) scale(.97)}.reveal.zoom.in{transform:none}
+.group .reveal:nth-child(2){transition-delay:.08s}.group .reveal:nth-child(3){transition-delay:.16s}.group .reveal:nth-child(4){transition-delay:.24s}.group .reveal:nth-child(5){transition-delay:.32s}.group .reveal:nth-child(6){transition-delay:.4s}
+@media (prefers-reduced-motion:reduce){.reveal,.reveal.zoom{opacity:1;transform:none;transition:none}.card,.btn{transition:none}}
+@media (max-width:860px){.cards,.stats{grid-template-columns:1fr 1fr}.feature,.feature.flip{grid-template-columns:1fr;gap:28px}.feature.flip .text{order:0}nav .links{display:none}}
+@media (max-width:520px){.cards,.stats{grid-template-columns:1fr}}
+</style></head><body>
+<nav><div class="wrap"><a class="brand" href="#"><span class="mark">TR</span>Trading Research Academy</a><div class="links"><a href="#learn">Learn</a><a href="#practice">Practice</a><a href="#research">Research</a></div><a href="/app#login">Sign in</a><a class="btn primary" href="/app" style="padding:8px 14px">Open the app</a></div></nav>
+
+<header class="hero wrap">
+  <span class="pill reveal">Free · runs on your computer · no broker</span>
+  <h1 class="reveal">Learn how markets really work, then test it yourself.</h1>
+  <p class="lede reveal">A 20-lesson course on stocks, crypto, risk and trading systems, with a paper trading lab and a backtesting lab built in. Every number is shown with its assumptions, and nothing is sold to you.</p>
+  <div class="cta reveal"><a class="btn primary" href="/app#lesson/1">Start lesson 1</a><a class="btn" href="#learn">See what's inside</a></div>
+  <div class="shot reveal zoom"><img src="img/home.png" alt="Start here screen with the next lesson and review cards"></div>
+</header>
+
+<section id="learn"><div class="wrap">
+  <div class="reveal"><div class="kicker">Learn</div><h2>A course that builds one idea at a time.</h2><p class="sub">Five parts, from what a position actually exposes you to, through risk models and market microstructure, to how automated systems are controlled. Each lesson ends with a worked example, a quiz and a short teach-back.</p></div>
+  <div class="cards group">
+    <div class="card reveal"><div class="n">Part 1 · Lessons 1–4</div><h3>Foundations</h3><p>Exposure, products, order types, margin and position sizing from a planned loss.</p></div>
+    <div class="card reveal"><div class="n">Part 2 · Lessons 5–8</div><h3>Quant strategies</h3><p>Momentum, value at risk, execution and why parameter optimization overfits.</p></div>
+    <div class="card reveal"><div class="n">Part 3 · Lessons 9–12</div><h3>Microstructure</h3><p>Order books, spreads, routing and what retail traders can and cannot see.</p></div>
+    <div class="card reveal"><div class="n">Part 4 · Lessons 13–16</div><h3>Automation</h3><p>How a trading system is built, and the kill switches and limits that keep it safe.</p></div>
+    <div class="card reveal"><div class="n">Part 5 · Lessons 17–20</div><h3>Discipline</h3><p>Process, U.S. consumer protections, tax basics and a final graduation review.</p></div>
+    <div class="card reveal"><div class="n">Every lesson</div><h3>Spaced review</h3><p>Missed ideas come back as review cards on the day you are most likely to forget them.</p></div>
+  </div>
+</div></section>
+
+<section id="practice" style="background:var(--panel);border-block:1px solid var(--line)"><div class="wrap feature flip">
+  <div class="frame reveal zoom"><img src="img/paper.png" alt="Paper trading lab with watchlist, chart and order ticket"></div>
+  <div class="text reveal"><div class="kicker">Practice</div><h2>Paper trade with every cost in view.</h2><p class="sub">Place long-only paper orders and see the fee, slippage, risk to your stop and reward to your target before you click.</p>
+    <ul><li><b>Cent-accurate ledger.</b> Cash plus positions always equals equity.</li><li><b>Stops that gap.</b> Exits fill at the real gap price, not the stop you hoped for.</li><li><b>Journal prompts.</b> Every fill asks what you expected and why.</li></ul></div>
+</div></section>
+
+<section id="research"><div class="wrap feature">
+  <div class="text reveal"><div class="kicker">Research</div><h2>Backtest a rule without fooling yourself.</h2><p class="sub">Load real daily data from Kraken, Alpha Vantage or CoinGecko, pick one of four published rules, and read the assumptions before the results.</p>
+    <ul><li><b>A locked holdout.</b> The last 20% of data stays hidden until you reveal it once.</li><li><b>Every trade explained.</b> Each row says in plain English why it entered and exited.</li><li><b>Honest uncertainty.</b> Monte Carlo ranges and "undefined" instead of made-up precision.</li></ul></div>
+  <div class="frame reveal zoom"><img src="img/backtest.png" alt="Backtesting lab with dataset, rule, results and trades"></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="reveal"><div class="kicker">By the numbers</div><h2>Built to teach, checked like software.</h2></div>
+  <div class="stats group">
+    <div class="stat reveal"><b data-count="20">20</b><span>lessons in 5 parts</span></div>
+    <div class="stat reveal"><b data-count="7">7</b><span>backtestable strategy rules</span></div>
+    <div class="stat reveal"><b data-count="7">7</b><span>market data sources</span></div>
+    <div class="stat reveal"><b data-count="71">71</b><span>automated tests passing</span></div>
+  </div>
+  <div class="honest reveal">Educational only. Paper trading uses simulated fills, no broker is connected, and nothing here is financial advice. Most simple strategies do not beat buy-and-hold after costs; the goal is a sound process, not a promised profit.</div>
+</div></section>
+
+<section id="start" style="padding-top:0"><div class="wrap"><div class="final reveal zoom">
+  <h2>Start with Lesson 1.</h2><p>Run it locally with one command. Your progress stays in your browser.</p>
+  <div class="cta"><a class="btn primary" href="/app">Open the app</a> <a class="btn" href="/app#signup">Create a free account</a></div>
+  <p style="font:500 14px 'JetBrains Mono';color:#9fe3c4;margin-top:20px">node app/server.js</p>
+</div></div></section>
+
+<footer>Trading Research Academy · learning, not trading advice</footer>
+
+<script>
+// Reveal on scroll; count stats up once when they appear.
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');io.unobserve(e.target);
+  const b=e.target.querySelector('[data-count]');if(b&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const n=+b.dataset.count,t0=performance.now();const step=t=>{const p=Math.min(1,(t-t0)/900);b.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body></html>
