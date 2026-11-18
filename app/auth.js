@@ -10,14 +10,15 @@
   const busy = (form, on) => form && form.querySelectorAll('button,input').forEach(x => { x.disabled = on; });
   // Generic wording so the form does not reveal which emails have accounts.
   const GENERIC = 'If that account exists, check your email for the next step.';
+  const OFF = 'Accounts are not connected on this server yet. Everything still saves in this browser.';
+  const offNote = () => A.enabled ? '' : `<div class="notice warning">${OFF}</div>`;
 
   function header() {
     const slot = el('accountSlot');
     if (!slot) return;
-    if (!A.enabled) { slot.innerHTML = '<span class="local-label" title="Accounts are off on this server">Local only</span>'; return; }
     slot.innerHTML = A.user
       ? `<a class="button secondary small" href="#account">${esc(A.user.email || 'Account')}</a>`
-      : '<a class="button secondary small" href="#login">Sign in</a>';
+      : '<a class="button secondary small" href="#login">Sign in</a><a class="button small" href="#signup">Create account</a>';
   }
 
   // ---- Market API: send the session token so the server can check access to keyed data sources.
@@ -73,9 +74,8 @@
 
   const views = {
     login() {
-      if (!A.enabled) return off();
       if (A.user) return views.account();
-      shell('Sign in', 'Sign in to sync your progress across devices.', `${providerButtons()}
+      shell('Sign in', 'Sign in to sync your progress across devices.', `${offNote()}${providerButtons()}
         <form id="loginForm" class="auth-form" onsubmit="event.preventDefault();TRA_AUTH.signIn(this)" novalidate>
           <label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required>
           ${pw('authPassword', 'Password', 'current-password')}
@@ -83,8 +83,7 @@
         </form><p class="muted small"><a href="#reset">Forgot your password?</a> · New here? <a href="#signup">Create an account</a></p>`);
     },
     signup() {
-      if (!A.enabled) return off();
-      shell('Create an account', 'Free. Your progress syncs across devices. No broker, no real money.', `${providerButtons()}
+      shell('Create an account', 'Free. Your progress syncs across devices. No broker, no real money.', `${offNote()}${providerButtons()}
         <form id="signupForm" class="auth-form" onsubmit="event.preventDefault();TRA_AUTH.signUp(this)" novalidate>
           <label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required>
           ${pw('authPassword', 'Password (10+ characters, upper and lower case, a number)', 'new-password')}
@@ -92,8 +91,7 @@
         </form><p class="muted small">Already have an account? <a href="#login">Sign in</a></p>`);
     },
     reset() {
-      if (!A.enabled) return off();
-      shell('Reset your password', 'Enter your email and we will send a reset link.', `
+      shell('Reset your password', 'Enter your email and we will send a reset link.', `${offNote()}
         <form class="auth-form" onsubmit="event.preventDefault();TRA_AUTH.sendReset(this)" novalidate>
           <label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required>
           <button class="button" type="submit">Send reset link</button><p id="authMsg" class="auth-msg" role="status" aria-live="polite"></p>
@@ -122,8 +120,8 @@
   const validEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
   const strong = v => v.length >= 10 && /[a-z]/.test(v) && /[A-Z]/.test(v) && /\d/.test(v);
   A.toggle = (id, btn) => { const i = el(id); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; btn.textContent = show ? 'Hide' : 'Show'; btn.setAttribute('aria-pressed', String(show)); };
-  A.oauth = async provider => { const { error } = await A.client.auth.signInWithOAuth({ provider, options: { redirectTo: appUrl() } }); if (error) say('authMsg', 'Could not start sign-in. Try again.'); };
-  A.signIn = async form => {
+  A.oauth = async provider => { if (!A.enabled) return say('authMsg', OFF); const { error } = await A.client.auth.signInWithOAuth({ provider, options: { redirectTo: appUrl() } }); if (error) say('authMsg', 'Could not start sign-in. Try again.'); };
+  A.signIn = async form => { if (!A.enabled) return say('authMsg', OFF);
     const email = el('authEmail').value.trim(), password = el('authPassword').value;
     if (!validEmail(email) || !password) return say('authMsg', 'Enter your email and password.');
     busy(form, true); say('authMsg', 'Signing in…', true);
@@ -132,7 +130,7 @@
     if (error) return say('authMsg', error.status === 429 ? 'Too many attempts. Wait a minute and try again.' : !error.status || /fetch/i.test(error.name || '') ? 'Could not reach the sign-in service. Check your connection and try again.' : 'Email or password is incorrect, or the email is not confirmed yet.');
     location.hash = '#home';
   };
-  A.signUp = async form => {
+  A.signUp = async form => { if (!A.enabled) return say('authMsg', OFF);
     const email = el('authEmail').value.trim(), password = el('authPassword').value;
     if (!validEmail(email)) return say('authMsg', 'Enter a valid email address.');
     if (!strong(password)) return say('authMsg', 'Use at least 10 characters with upper and lower case letters and a number.');
@@ -142,7 +140,7 @@
     if (error && error.status === 429) return say('authMsg', 'Too many attempts. Wait a minute and try again.');
     say('authMsg', 'Check your email to confirm your account, then sign in.', true);
   };
-  A.sendReset = async form => {
+  A.sendReset = async form => { if (!A.enabled) return say('authMsg', OFF);
     const email = el('authEmail').value.trim();
     if (!validEmail(email)) return say('authMsg', 'Enter a valid email address.');
     busy(form, true);
