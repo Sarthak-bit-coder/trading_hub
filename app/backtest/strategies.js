@@ -13,6 +13,9 @@
   function sma(length = 200, fast = 50) {
     return {
       id: 'sma-cross',
+    summary: "Buy when the 50-day average crosses above the 200-day average; sell when it crosses back below.",
+    source: "Classic trend-following baseline",
+    sourceUrl: "",
       name: 'Moving-average cross',
       version: '1.0.0',
       params: { fast, slow: length },
@@ -35,6 +38,9 @@
 
   const rsi2 = {
     id: 'rsi2-pullback',
+    summary: "In an uptrend (close above the 200-day average), buy when the 2-day RSI drops below 10; sell when the close rises above the 5-day average.",
+    source: "Connors RSI(2), StockCharts",
+    sourceUrl: "https://chartschool.stockcharts.com/table-of-contents/trading-strategies-and-models/trading-strategies/rsi-2",
     name: 'RSI(2) pullback in an uptrend',
     version: '1.0.0',
     params: { trend: 200, exit: 5, threshold: 10 },
@@ -63,6 +69,9 @@
 
   const donchian = {
     id: 'donchian-system-1',
+    summary: "Buy when the close breaks above the highest high of the last 20 days; sell when it breaks below the lowest low of the last 10.",
+    source: "Turtle System 1",
+    sourceUrl: "https://www.turtletrader.com/rules/",
     name: 'Donchian 20/10 breakout',
     version: '1.0.0',
     params: { entry: 20, exit: 10 },
@@ -88,6 +97,9 @@
 
   const momentum = {
     id: 'time-series-momentum',
+    summary: "Hold when the price is higher than one year ago; step aside when it is lower.",
+    source: "12-month time-series momentum",
+    sourceUrl: "",
     name: '12-month time-series momentum',
     version: '1.0.0',
     params: { lookback: 252 },
@@ -114,6 +126,9 @@
 
   const trendFilter = {
     id: 'trend-filter-200',
+    summary: "Buy when the close crosses above its 200-day average; sell when it crosses below.",
+    source: "Faber, tactical asset allocation",
+    sourceUrl: "https://www.onlineinvestingai.com/blog/wp-content/uploads/2011/04/A-Quantitative-Approach-to-Tactical-Asset-Allocation.pdf",
     name: '200-day trend filter',
     version: '1.0.0',
     params: { length: 200 },
@@ -129,6 +144,9 @@
 
   const macd = {
     id: 'macd-cross',
+    summary: "Buy when MACD (12/26 EMA difference) crosses above its 9-day signal line; sell when it crosses below.",
+    source: "Standard MACD definition",
+    sourceUrl: "",
     name: 'MACD 12/26/9 cross',
     version: '1.0.0',
     params: { fast: 12, slow: 26, signal: 9 },
@@ -152,6 +170,9 @@
 
   const bollinger = {
     id: 'bollinger-reentry',
+    summary: "After a close below the lower band (20-day average minus 2 standard deviations), buy when price closes back inside; sell at the middle band.",
+    source: "Bollinger Bands",
+    sourceUrl: "https://www.bollingerbands.com/bollinger-band-rules",
     name: 'Bollinger band re-entry',
     version: '1.0.0',
     params: { length: 20, k: 2 },
