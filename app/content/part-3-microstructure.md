@@ -262,7 +262,7 @@ Payment for order flow (PFOF) is compensation a broker receives for directing cu
 
 Public disclosures you can read:
 - Rule 606 order-routing reports: broker-dealers publish quarterly reports on where they route non-directed orders in NMS stocks, broken down by calendar month after 2018 amendments, including the material terms of PFOF arrangements. Customers can also request order-specific routing information.
-- Rule 605 execution-quality reports: market centers, and after the 2024 amendments larger broker-dealers (100,000 or more customer accounts) and single-dealer platforms, publish monthly execution-quality statistics plus a summary report. The amendments' compliance date was 18 months after the effective date; check the exact date before relying on a firm's report [unverified: exact compliance date].
+- Rule 605 execution-quality reports: market centers and, under the 2024 amendments, larger broker-dealers and single-dealer platforms publish monthly statistics and summary reports. Compliance for amended requirements began August 1, 2026. (SEC Release 34-104147: https://www.sec.gov/files/rules/exorders/2026/34-105136.pdf)
 - FINRA OTC Transparency data: weekly ATS and non-ATS volume by security, published with a delay (per FINRA's 2019 notice: two weeks for Tier 1 NMS stocks and four weeks for other NMS stocks and OTC equity securities; check the current page).
 
 Rule changes in progress: Regulation NMS Rule 611 (the Order Protection or trade-through rule) currently requires trading centers to prevent trades at prices worse than protected displayed quotes, subject to exceptions. On June 11, 2026 the SEC proposed rescinding Rule 611 and Rule 610(e) (the locked/crossed market prohibition); comments were due August 17, 2026. As of this writing it is a proposal, not a final rule. Check the SEC's site for its current status before teaching it as current law.
@@ -355,7 +355,7 @@ Speed matters because continuous order books process messages one at a time. Bud
 
 On May 6, 2010, U.S. stock and futures prices fell and rebounded within minutes (the Flash Crash). The CFTC and SEC staff published a joint report on the event. Kirilenko, Kyle, Samadi and Tuzun (2017), using audit-trail data for the E-mini, report that the most active intraday intermediaries (classified as HFTs) did not change their trading pattern as prices fell; earlier working-paper versions described HFTs as contributing to volatility by demanding immediacy. The research shows how fast liquidity can vanish, not that any single group always helps or always harms.
 
-Why displayed size vanishes: by the time your order travels from your device to your broker, through the broker's systems and router, to a venue, faster participants may have cancelled quotes or traded against them. Your screen is a delayed, sampled picture. Light in optical fiber covers roughly one kilometer every 5 microseconds [unverified: approximate physics figure], so geography alone creates delays that firms pay to minimize (colocation, direct feeds).
+Why displayed size vanishes: by the time your order travels from your device to your broker, through the broker's systems and router, to a venue, faster participants may have cancelled quotes or traded against them. Your screen is a delayed, sampled picture. Light in optical fiber travels at roughly 200,000 kilometers per second, so one kilometer takes about 5 microseconds; routing and equipment add latency. (Ciena: https://www.ciena.com/insights/what-is/What-Is-Latency.html)
 
 What a retail trader can usually observe:
 - Your own order states, fills, fill prices and timestamps from your broker.
@@ -372,7 +372,7 @@ What a retail trader generally cannot observe:
 - Every quote update: platforms sample or throttle updates.
 - Exchange-level timestamps precise enough to reconstruct event order.
 
-Manipulative practices such as spoofing (placing orders intended to be cancelled before execution to mislead others) are prohibited under U.S. law [unverified in this research pass: cite the CFTC and SEC enforcement pages before teaching specifics]. A pattern on your screen that looks like spoofing usually cannot be confirmed from retail data.
+Spoofing (bidding or offering with intent to cancel before execution) is prohibited under the Commodity Exchange Act. (7 U.S.C. section 6c(a)(5)(C): https://uscode.house.gov/view.xhtml?req=granuleid:USC-prelim-title7-section6c&num=0&edition=prelim) A pattern on your screen that looks like spoofing usually cannot be confirmed from retail data.
 
 Vocabulary:
 - High-frequency trading: automated trading with very low latency and high message rates.
