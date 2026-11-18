@@ -1,5 +1,6 @@
 # Local reference clones; each is maintained as its own Git repository.
 /materials/external_repos/
+/app/.cache/
 
 # Third-party agent skill installs
 /.agents/
@@ -7,3 +8,7 @@
 /.gemini/
 /agent/
 /skills-lock.json
+
+# Local secrets
+.env
+.env.*
