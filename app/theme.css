@@ -50,3 +50,27 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea{bo
 input[type=number],input[inputmode=decimal]{font-family:var(--font-mono)}
 input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:1px;border-color:var(--green)}
 label{text-transform:none;letter-spacing:0}
+
+/* Home: hero note and first-session steps as card boxes */
+.hero-card{background:var(--green-soft);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius)}
+.hero-card .eyebrow,.hero-card small,.hero-card p{color:var(--muted)}
+.first-session-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.first-step{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:8px}
+.first-step.is-done{background:var(--green-soft);border-color:color-mix(in srgb,var(--green) 30%,var(--line))}
+.first-step-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.step-number{font:500 12px var(--font-mono);color:var(--muted)}
+.first-step h3{margin:0;font-size:15px}.first-step p{margin:0}
+.text-button{background:none;border:0;padding:0;color:var(--green);font:600 13px var(--font-sans);cursor:pointer;text-align:left}
+.text-button:hover{text-decoration:underline}
+.status{display:inline-block;font:500 11px var(--font-mono);padding:2px 6px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+/* Old styles forced uppercase on these; the design uses sentence case. */
+.eyebrow,.hero-card small,.lesson-body .hypo,.pill,.risklens-card .metric-label{text-transform:none;letter-spacing:0}
+.hero-card small,.hero-card .eyebrow{font:500 13px var(--font-sans);color:var(--muted)}
+.home-metrics{margin-top:16px}.home-research-path{margin-top:32px}.first-session{margin-top:8px}
+.glossary-item{padding:12px 0;border-top:1px solid var(--line)}.glossary-item:first-child{border-top:0}
+[data-theme=dark] #navigation a.active{background:var(--green-soft);color:var(--green)}
+/* Phone width: inputs may shrink so toolbars wrap instead of overflowing. */
+input,select,textarea{max-width:100%;min-width:0}
+@media (max-width:760px){.bt-toolbar{flex-wrap:wrap}.bt-toolbar>*{min-width:0;flex:1 1 100%}}
+.bt-main{grid-template-columns:minmax(0,1fr)}.bt-layout>*{min-width:0}
+@media (max-width:760px){.form-grid{grid-template-columns:minmax(0,1fr)}}
