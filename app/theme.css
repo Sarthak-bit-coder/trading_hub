@@ -1,0 +1,52 @@
+/* Design v2 theme (docs/design). Loaded after styles.css; restyles shared classes only. */
+@font-face{font-family:Inter;src:url(vendor/fonts/inter-latin-wght-normal.woff2) format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url(vendor/fonts/jetbrains-mono-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url(vendor/fonts/jetbrains-mono-latin-500-normal.woff2) format('woff2');font-weight:500;font-display:swap}
+
+:root{--font-sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  --bg:#f7f6f3;--paper:#fff;--ink:#1c1a17;--muted:#77716a;--line:#e4e1da;--green:#0d6e6e;--green-soft:#e3f0ef;--gold:#e9c98f;--red:#b4372f;--up:#1f7a4d;
+  --shadow:none;--radius:10px}
+[data-theme=dark]{--bg:#121413;--paper:#1a1d1c;--ink:#eceae5;--muted:#a19c94;--line:#2c302e;--green:#5fb3ad;--green-soft:#163331;--gold:#a7823f;--red:#ec8b82;--up:#6fcf9b}
+body{font-size:14.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+
+/* Sidebar and top bar */
+.brand-mark{width:28px;height:28px;border-radius:6px;background:var(--green);font:600 12px var(--font-mono)}
+.brand b{font-size:14px;font-weight:600;letter-spacing:0}.brand small{font:500 12px var(--font-sans);letter-spacing:0;color:var(--muted)}
+.side-label{font:600 12px var(--font-sans);letter-spacing:0;color:var(--muted);text-transform:none}
+#navigation a{font-size:14px;border-radius:6px;padding:6px 10px}
+#navigation a.active,#navigation a[aria-current=page]{background:var(--green-soft);color:var(--green);font-weight:600}
+.topbar{background:var(--paper)}
+.crumb{font:400 14px var(--font-sans);letter-spacing:0;text-transform:none;color:var(--muted)}
+
+/* Page heads: one quiet label, a plain title */
+.eyebrow{font:500 13px var(--font-sans);letter-spacing:0;text-transform:none;color:var(--muted);margin-bottom:6px}
+h1{font:700 28px/1.2 var(--font-sans);letter-spacing:-.02em;margin:0 0 8px}
+.page-head{margin:4px 0 24px}.page-head p{color:var(--muted);max-width:66ch}
+
+/* Card boxes */
+.card{border-radius:var(--radius);box-shadow:none;padding:20px}
+.button{border-radius:8px;background:var(--green);font-size:14px;padding:8px 14px}
+.button.secondary{background:var(--paper);border:1px solid var(--line);color:var(--ink)}
+.pill{font:500 11px var(--font-mono);letter-spacing:0;text-transform:none;border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+.synthetic-badge{background:#fdf3e1;color:#7a4b00;border-color:#e9c98f}
+[data-theme=dark] .synthetic-badge{background:#3a2c12;color:#f1d59c;border-color:#7a5a20}
+.notice{font-size:14px;border-radius:0 6px 6px 0}
+.metric{font:500 22px var(--font-mono);letter-spacing:0}
+.metric-label,.tiny{letter-spacing:0;text-transform:none}
+table{font-size:14px}td,th{font-variant-numeric:tabular-nums}
+
+/* Motion: cards rise in once; small hover lift; all off for reduced motion */
+@keyframes tra-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#app .card{animation:tra-rise .3s ease-out both}
+#app .grid>.card:nth-child(2){animation-delay:.05s}#app .grid>.card:nth-child(3){animation-delay:.1s}#app .grid>.card:nth-child(n+4){animation-delay:.15s}
+.button{transition:transform .15s ease,filter .15s ease}.button:hover{transform:translateY(-1px)}
+@media (prefers-reduced-motion:reduce){#app .card{animation:none}.button{transition:none}.button:hover{transform:none}}
+#navigation a.active{border-left:0;padding-left:10px;border-radius:6px}
+/* One disclosure arrow per group: keep the chevron, hide the native marker. */
+summary.side-label{list-style:none;display:flex;justify-content:space-between;cursor:pointer}summary.side-label::-webkit-details-marker{display:none}
+details.nav-group[open]>summary.side-label span{transform:rotate(180deg)}
+/* Form fields: hairline boxes, mono for numbers via inputmode/number type */
+input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea{border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);padding:7px 10px;font-size:14px}
+input[type=number],input[inputmode=decimal]{font-family:var(--font-mono)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:1px;border-color:var(--green)}
+label{text-transform:none;letter-spacing:0}
