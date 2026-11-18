@@ -1,0 +1,42 @@
+<!--HEIGHT:1230--><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Course map · Trading Research Academy</title><link rel="stylesheet" href="../base.css">
+<style>
+.part{display:grid;grid-template-columns:200px 1fr;gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.part:first-of-type{border-top:0}
+.lessons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.l{display:flex;gap:10px;align-items:baseline;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px;background:var(--panel)}
+.l .n{font:500 12px var(--mono);color:var(--muted);flex:none;width:22px}
+.l.done{background:var(--accent-soft);border-color:#bcd9d6}.l.done .n{color:var(--accent)}
+.l.now{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.planned .l{background:transparent;border-style:dashed;color:var(--muted)}
+</style></head>
+<body><div class="shell"><!--SIDEBAR:course-->
+<div class="main">
+  <header class="top"><div class="crumb">Learn / <b>Course map</b></div><div class="search">Search lessons and glossary <span class="kbd">Ctrl K</span></div></header>
+  <main class="page">
+    <h1>Course map</h1>
+    <p class="lede">Twenty lessons in five parts are written. Parts 6 to 10 are planned and not written yet.</p>
+    <div class="row small muted" style="margin:16px 0 8px;gap:20px"><span><span class="l done" style="display:inline-block;padding:0 8px">&nbsp;</span> Mastered</span><span><span class="l now" style="display:inline-block;padding:0 8px">&nbsp;</span> In progress</span><span><span class="l" style="display:inline-block;padding:0 8px;border-style:dashed">&nbsp;</span> Planned</span></div>
+
+    <section class="card" style="padding:4px 20px">
+      <div class="part"><div><h3>Part 1</h3><p class="muted small">Foundations: exposure, products, orders, sizing</p><p class="small num" style="margin-top:6px">4 / 4</p></div>
+        <div class="lessons"><div class="l done"><span class="n">1</span>Exposure is not margin</div><div class="l done"><span class="n">2</span>Read the product before the chart</div><div class="l done"><span class="n">3</span>Orders control different things</div><div class="l done"><span class="n">4</span>Size from planned loss, not buying power</div></div></div>
+      <div class="part"><div><h3>Part 2</h3><p class="muted small">Quantitative strategies and risk</p><p class="small num" style="margin-top:6px">4 / 4</p></div>
+        <div class="lessons"><div class="l done"><span class="n">5</span>Multi-asset momentum</div><div class="l done"><span class="n">6</span>Downside risk and Cornish-Fisher VaR</div><div class="l done"><span class="n">7</span>Execution, stops and paper trading</div><div class="l done"><span class="n">8</span>Optimization and overfitting</div></div></div>
+      <div class="part"><div><h3>Part 3</h3><p class="muted small">Market microstructure</p><p class="small num" style="margin-top:6px">1 / 4</p></div>
+        <div class="lessons"><div class="l done"><span class="n">9</span>The limit order book and queue priority</div><div class="l now"><span class="n">10</span>Liquidity, spreads, depth and impact</div><div class="l"><span class="n">11</span>Order routing, venues and payment for order flow</div><div class="l"><span class="n">12</span>What retail can and cannot see</div></div></div>
+      <div class="part"><div><h3>Part 4</h3><p class="muted small">Automation</p><p class="small num" style="margin-top:6px">0 / 4</p></div>
+        <div class="lessons"><div class="l"><span class="n">13</span>How an automated trading system works</div><div class="l"><span class="n">14</span>Paper-only broker APIs</div><div class="l"><span class="n">15</span>Kill switch, loss limits, audit log</div><div class="l"><span class="n">16</span>Forward testing vs. backtests</div></div></div>
+      <div class="part"><div><h3>Part 5</h3><p class="muted small">Discipline, safeguards and tax</p><p class="small num" style="margin-top:6px">0 / 4</p></div>
+        <div class="lessons"><div class="l"><span class="n">17</span>Psychology and process discipline</div><div class="l"><span class="n">18</span>U.S. and California safeguards</div><div class="l"><span class="n">19</span>Tax introduction for U.S. traders</div><div class="l"><span class="n">20</span>Review rubric and graduation</div></div></div>
+    </section>
+
+    <h2 style="margin:28px 0 4px">Planned</h2>
+    <p class="muted small">Outlines exist in the curriculum plan. Lessons appear here once written and fact-checked.</p>
+    <section class="card planned" style="padding:4px 20px;margin-top:12px">
+      <div class="part"><div><h3>Parts 6 to 9</h3><p class="muted small">New markets</p></div>
+        <div class="lessons"><div class="l">Bonds and interest rates</div><div class="l">Crypto markets</div><div class="l">Options and futures basics</div><div class="l">Machine learning for markets</div></div></div>
+      <div class="part"><div><h3>Part 10</h3><p class="muted small">Building a trading bot, from real projects</p></div>
+        <div class="lessons"><div class="l">Vektor: architecture and data</div><div class="l">RiskLens: portfolio risk engine</div><div class="l">Rotation-Index: ridge regression and holdouts</div><div class="l">Data, backtest, paper run, controls</div></div></div>
+    </section>
+  </main>
+</div></div></body></html>

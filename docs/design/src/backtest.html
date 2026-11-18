@@ -1,0 +1,83 @@
+<!--HEIGHT:1560--><!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Backtesting lab · Trading Research Academy</title><link rel="stylesheet" href="../base.css">
+<style>
+.steps{display:flex;gap:8px;font-size:14px}.steps span{padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--panel)}.steps span.on{border-color:var(--accent);color:var(--accent);font-weight:600}.steps span.done{color:var(--ink-2)}
+.choice{border:1px solid var(--line);border-radius:8px;padding:12px;font-size:14px}.choice.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.metric{padding:12px 0;border-top:1px solid var(--line)}.metric b{display:block;font:500 20px var(--mono)}
+.why{background:var(--sunk);font-size:13.5px;color:var(--ink-2)}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}.field div{border:1px solid var(--line);border-radius:6px;padding:6px 10px;font:14px var(--mono);background:var(--panel)}
+</style></head>
+<body><div class="shell"><!--SIDEBAR:backtest-->
+<div class="main">
+  <header class="top"><div class="crumb">Research / <b>Backtesting lab</b></div><div class="search">Search lessons and glossary <span class="kbd">Ctrl K</span></div></header>
+  <main class="page">
+    <div class="spread"><div><h1>Backtesting lab</h1><p class="lede">Test one rule on one dataset. Results show the assumptions first, then the numbers, then every trade.</p></div></div>
+    <div class="steps" style="margin:20px 0"><span class="done">1 · Data</span><span class="done">2 · Rule</span><span class="done">3 · Costs</span><span class="on">4 · Results</span></div>
+
+    <div class="grid" style="grid-template-columns:300px minmax(0,1fr);align-items:start">
+      <aside class="stack">
+        <section class="card stack">
+          <div class="spread"><h3>Dataset</h3><span class="tag real">REAL DATA</span></div>
+          <p class="small">BTC/USD daily candles from Kraken public market data</p>
+          <dl class="kv small"><dt>Bars</dt><dd>720</dd><dt>From</dt><dd>2024-11-28</dd><dt>To</dt><dd>2026-11-17</dd></dl>
+          <p class="muted small">Personal learning use. Fetched 2026-11-18, cached 12 h.</p>
+        </section>
+        <section class="card stack">
+          <h3>Rule</h3>
+          <div class="choice">SMA cross</div>
+          <div class="choice on"><b>Donchian breakout</b><div class="muted small">Buy a 20-day high, exit a 10-day low</div></div>
+          <div class="choice">RSI(2) pullback</div>
+          <div class="choice">Time-series momentum</div>
+          <div class="grid g2"><div class="field"><label>Entry days</label><div>20</div></div><div class="field"><label>Exit days</label><div>10</div></div></div>
+        </section>
+        <section class="card stack">
+          <h3>Holdout</h3>
+          <p class="small muted">The last 20% of bars stay hidden until you reveal them once. Every run so far used the first 80%.</p>
+          <dl class="kv small"><dt>Runs on this dataset</dt><dd>3</dd><dt>Holdout</dt><dd>Locked</dd></dl>
+          <a class="btn" href="#" style="text-align:center">Reveal holdout (one time)</a>
+        </section>
+      </aside>
+
+      <section class="stack" style="min-width:0">
+        <div class="note">Assumptions: fees 1 bp per side · slippage 2 bp per side · 25% of equity per trade · fills at next day's open · 365 days per year for crypto.</div>
+
+        <div class="card">
+          <div class="spread"><h2>Equity vs. buy and hold</h2><span class="muted small">In-sample, first 576 bars</span></div>
+          <svg viewBox="0 0 760 240" width="100%" style="margin-top:12px;display:block" role="img" aria-label="Equity curve of the Donchian rule compared with buy and hold">
+            <g stroke="#e4e1da" stroke-width="1"><line x1="40" y1="20" x2="750" y2="20"/><line x1="40" y1="80" x2="750" y2="80"/><line x1="40" y1="140" x2="750" y2="140"/><line x1="40" y1="200" x2="750" y2="200"/></g>
+            <g font-family="JetBrains Mono" font-size="11" fill="#77716a"><text x="0" y="24">12.5k</text><text x="0" y="84">11.5k</text><text x="0" y="144">10.5k</text><text x="0" y="204">9.5k</text><text x="40" y="232">2024-11</text><text x="300" y="232">2025-06</text><text x="560" y="232">2026-01</text></g>
+            <polyline fill="none" stroke="#b9b2a7" stroke-width="1.5" stroke-dasharray="4 3" points="40,170 80,150 120,165 160,120 200,135 240,95 280,110 320,140 360,125 400,90 440,70 480,100 520,130 560,115 600,150 640,140 680,165 720,150 750,158"/>
+            <polyline fill="none" stroke="#0d6e6e" stroke-width="2" points="40,170 80,165 120,165 160,140 200,140 240,118 280,118 320,128 360,128 400,104 440,92 480,96 520,108 560,108 600,112 640,112 680,118 720,110 750,112"/>
+          </svg>
+          <div class="row small muted" style="margin-top:6px"><span style="color:var(--accent)">━ Donchian rule</span><span>┄ Buy and hold BTC</span></div>
+        </div>
+
+        <div class="card">
+          <h2>Results</h2>
+          <div class="grid g3" style="margin-top:8px;column-gap:24px">
+            <div class="metric"><span class="muted small">CAGR</span><b class="up">+6.1%</b></div>
+            <div class="metric"><span class="muted small">Max drawdown</span><b class="down">−9.8%</b></div>
+            <div class="metric"><span class="muted small">Sharpe (365)</span><b>0.58</b></div>
+            <div class="metric"><span class="muted small">Closed trades</span><b>11</b></div>
+            <div class="metric"><span class="muted small">Win rate</span><b>45%</b></div>
+            <div class="metric"><span class="muted small">Time in market</span><b>38%</b></div>
+          </div>
+          <p class="small muted" style="margin-top:12px">Monte Carlo of trade order (1,000 runs, seed 2026): max drawdown between 6.2% and 14.9%. Eleven trades is a small sample; treat these numbers as a description of the past, not a forecast.</p>
+        </div>
+
+        <div class="card">
+          <h2>Trades</h2>
+          <table style="margin-top:8px">
+            <thead><tr><th>Entry</th><th>Exit</th><th class="r">Entry price</th><th class="r">Exit price</th><th class="r">Net</th></tr></thead>
+            <tbody>
+              <tr><td class="num">2026-03-02</td><td class="num">2026-03-19</td><td class="r num">71,240</td><td class="r num">69,880</td><td class="r num down">−1.9%</td></tr>
+              <tr><td colspan="5" class="why">Entered: the close of 2026-02-27 (71,105) was above the prior 20-day high (70,960), so a buy filled at the next open, 71,240, plus 2 bp slippage. Exited: the 2026-03-18 close fell below the 10-day low.</td></tr>
+              <tr><td class="num">2025-10-06</td><td class="num">2025-11-12</td><td class="r num">62,410</td><td class="r num">67,950</td><td class="r num up">+8.9%</td></tr>
+              <tr><td class="num">2025-07-14</td><td class="num">2025-07-29</td><td class="r num">58,300</td><td class="r num">57,120</td><td class="r num down">−2.0%</td></tr>
+            </tbody>
+          </table>
+          <p class="small" style="margin-top:10px"><a href="#">Show all 11 trades</a> · <a href="#">Export CSV</a></p>
+        </div>
+      </section>
+    </div>
+  </main>
+</div></div></body></html>
