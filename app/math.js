@@ -27,6 +27,7 @@
     return {errors:[],fits:true,raw,quantity,notional,plannedLoss,budgetPct:budget/equity*100,worseLoss,margin:marginRatio?notional/marginRatio:null};
   }
   function scoreQuiz(correctIndexes,answers){let score=0;correctIndexes.forEach((correct,i)=>{if(answers[i]===correct)score++});return {score,total:correctIndexes.length,passed:correctIndexes.length>0&&score===correctIndexes.length};}
+  function shuffleChoices(options,correct,random=Math.random){const shuffled=options.slice();for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}return {options:shuffled,correct:shuffled.findIndex(option=>option.index===correct)}}
   const BACKUP_VERSION=2,LESSON_COUNT=20;
   const clone=value=>typeof structuredClone==='function'?structuredClone(value):JSON.parse(JSON.stringify(value));
   const plainObject=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
@@ -68,6 +69,8 @@
     if('displayName' in d&&(typeof d.displayName!=='string'||d.displayName.length>60))return false;
     if('paperEquityCurve' in d&&(!Array.isArray(d.paperEquityCurve)||d.paperEquityCurve.length>10000))return false;
     if('btPaperStartingEquity' in d&&(!Number.isFinite(+d.btPaperStartingEquity)||+d.btPaperStartingEquity<=0))return false;
+    if('equityCents' in d&&(!Number.isSafeInteger(d.equityCents)||d.equityCents<=0))return false;
+    if('ticketDraft' in d&&d.ticketDraft!==null&&(!plainObject(d.ticketDraft)||typeof d.ticketDraft.symbol!=='string'||!['buy','sell'].includes(d.ticketDraft.side)||!Number.isFinite(+d.ticketDraft.qty)||+d.ticketDraft.qty<=0))return false;
     if('testConsumed' in d&&typeof d.testConsumed!=='boolean')return false;
     if(Object.prototype.hasOwnProperty.call(d,'datasetMeta')&&(!d.datasetMeta||typeof d.datasetMeta!=='object'||Array.isArray(d.datasetMeta)))return false;
     return typeof d.assessmentPassed==='boolean'
@@ -103,6 +106,19 @@
     const slippageCost=Math.abs(executedPrice-p)*q;
     const totalFriction=fee+slippageCost;
     return {basePrice:p,executedPrice,notional,fee,slippageCost,totalFriction};
+  }
+  const cents=value=>Math.round((+value+Number.EPSILON)*100);
+  function paperLedger(trades=[],watchlist=[],startingCents=1000000){
+    let cashCents=startingCents;const orders=[];
+    for(const t of trades){const priceCents=t.priceCents??cents(t.price),feeCents=t.feeCents??cents(t.fee||0),qty=+t.qty,notionalCents=t.notionalCents??cents(priceCents*qty/100);
+      if(t.side==='buy')cashCents-=notionalCents+feeCents;else cashCents+=notionalCents-feeCents;
+      orders.push({...t,priceCents,feeCents,notionalCents,price:priceCents/100,fee:feeCents/100});
+    }
+    const lastPrices=new Map();for(const t of orders)lastPrices.set(t.symbol,t.price);
+    const marks=watchlist.map(x=>({...x,price:lastPrices.get(x.symbol)??cents(x.price)/100}));
+    for(const [symbol,price] of lastPrices)if(!marks.some(x=>x.symbol===symbol))marks.push({symbol,price});
+    const positions=calcPositions(orders,marks);
+    return {cashCents,orders,positions,equityCents:cashCents+Math.round(positions.reduce((s,p)=>s+p.qty*cents(p.price),0))};
   }
   function parametricVaR({notional,dailyVol,confidence=0.95}){
     const n=+notional,v=+dailyVol;
@@ -285,7 +301,7 @@
     positions.totalNotional=totalNotional;
     return positions;
   }
-  const api={BACKUP_VERSION,exposure,sizeLong,scoreQuiz,saveState,loadState,migrateBackup,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,mulberry32,simulatePriceTick,calcPositions};
+  const api={BACKUP_VERSION,exposure,sizeLong,scoreQuiz,shuffleChoices,saveState,loadState,migrateBackup,validateBackup,calcRiskReward,calcTradeFriction,parametricVaR,targetVolSize,maxDrawdown,mulberry32,simulatePriceTick,calcPositions,cents,paperLedger};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   root.AcademyMath=api;
 })(typeof window!=='undefined'?window:globalThis);

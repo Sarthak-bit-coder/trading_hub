@@ -1,11 +1,16 @@
 (function(root) {
   const mean = (ctx, end, length, key = 'c') => {
+    if (!Number.isInteger(end) || !Number.isInteger(length) || length < 1 || end - length + 1 < 0 || end >= ctx.length) return null;
     let sum = 0;
-    for (let i = end - length + 1; i <= end; i++) sum += ctx.bar(i)[key];
+    for (let i = end - length + 1; i <= end; i++) {
+      const bar = ctx.bar(i);
+      if (!bar || !Number.isFinite(bar[key])) return null;
+      sum += bar[key];
+    }
     return sum / length;
   };
 
-  function sma(length, fast = 50) {
+  function sma(length = 200, fast = 50) {
     return {
       id: 'sma-cross',
       version: '1.0.0',
@@ -17,7 +22,7 @@
       signal(ctx) {
         const p = this.params;
         const n = ctx.length;
-        if (n < Math.max(p.fast, p.slow) + 1) return null;
+        if (!Number.isFinite(p.fast) || !Number.isFinite(p.slow) || p.fast < 1 || p.slow < 1 || n < Math.max(p.fast, p.slow) + 1) return null;
         const f = mean(ctx, n - 1, p.fast);
         const s = mean(ctx, n - 1, p.slow);
         const pf = mean(ctx, n - 2, p.fast);

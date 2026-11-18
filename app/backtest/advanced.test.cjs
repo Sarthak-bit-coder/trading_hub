@@ -41,6 +41,18 @@ test('all four strategy factories expose required interface', () => {
   }
 });
 
+test('every registered strategy runs on synthetic histories and trades at 2,000 bars', () => {
+  for (const count of [500, 2000]) {
+    const data = generateBars({ seed: 1, count }).bars;
+    for (const definition of strategies.all) {
+      assert.deepEqual(Object.keys(definition.params).sort(), Object.keys(definition.schema).sort());
+      for (const [key, spec] of Object.entries(definition.schema)) assert.equal(definition.params[key], spec.default, `${definition.id}.${key} default`);
+      const result = run({ bars: data, strategy: definition });
+      if (count === 2000) assert.ok(result.trades.length > 0, `${definition.id} made no trades`);
+    }
+  }
+});
+
 test('stop target same-bar ambiguity exits at stop and flags trade', () => {
   const strategy = { id: 'buy', version: '1', params: {}, schema: {}, signal: ctx => ctx.length === 1 ? 'buy' : null };
   const data = [
@@ -50,6 +62,8 @@ test('stop target same-bar ambiguity exits at stop and flags trade', () => {
   const result = run({ bars: data, strategy, startEquity: 1000, allocationPct: 100, feeBps: 0, slippageBps: 0, stopLossPct: 10, targetPct: 10 });
   assert.equal(result.trades[0].exitPrice, 9);
   assert.equal(result.trades[0].ambiguousStopTarget, true);
+  assert.equal(result.trades[0].stopHit, true);
+  assert.equal(result.trades[0].targetHit, true);
 });
 
 test('metrics are finite, annualized explicitly, and seeded Monte Carlo repeats', () => {
