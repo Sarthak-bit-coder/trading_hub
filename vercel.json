@@ -5,7 +5,8 @@
   "cleanUrls": false,
   "rewrites": [
     { "source": "/", "destination": "/home.html" },
-    { "source": "/app", "destination": "/index.html" }
+    { "source": "/app", "destination": "/index.html" },
+    { "source": "/api/market/:path*", "destination": "/api/market/[...path]" }
   ],
   "headers": [
     {
